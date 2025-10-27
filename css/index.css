@@ -1,0 +1,213 @@
+/* index.css */
+
+/* ======================================================= */
+/* ====== 1. GLOBAL TEMALAR (TÜM UYGULAMA İÇİN KRİTİK) ===== */
+/* ======================================================= */
+
+/* Varsayılan (light) tema */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #000000;
+  --accent-color: #ffd700;
+  --card-bg: transparent;
+  --search-bg: #f0f0f0;
+  --nav-bg: #f7f7f7;
+}
+
+/* Dark tema */
+[data-theme="dark"] {
+  --bg-color: #1a150d;
+  --text-color: #f7f7f7;
+  --accent-color: #ffd700;
+  --card-bg: #2e2820; 
+  --search-bg: #2e2820;
+  --nav-bg: #121212;
+}
+
+/* Sistem teması (kullanıcının cihaz teması) */
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] {
+    --bg-color: #1a150d;
+    --text-color: #f7f7f7;
+    --accent-color: #ffd700;
+    --card-bg: #2e2820;
+    --search-bg: #2e2820;
+    --nav-bg: #121212;
+  }
+}
+
+/* ======================================================= */
+/* ====== 2. GENEL STİL (BODY ve Ana İçerik Kapsayıcısı) ==== */
+/* ======================================================= */
+
+/* Body ve temel font ayarları */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Inter', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s, color 0.3s;
+  min-height: 100vh;
+}
+
+/* Ana içerik kapsayıcısı (Router tarafından yüklenen içeriği sarmalar) */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  padding: 40px 20px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+/* ======================================================= */
+/* ====== 3. NAVİGASYON (NAVBAR) STİLLERİ ================= */
+/* ======================================================= */
+
+/* Navbar'ın kendisi */
+#navbar nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background-color: var(--nav-bg);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  height: 60px;
+  width: 100%;
+}
+
+/* Sol kısım */
+.navLeft {
+  margin-right: auto;
+}
+
+/* Orta kısım */
+.navCenter {
+  display: flex;
+  gap: 20px;
+}
+
+/* Sağ kısım */
+.navRight {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+  align-items: center;
+  margin-right: 25px;
+}
+
+/* ======================================================= */
+/* ====== 4. ORTAK UI ELEMENTLERİ (Dropdown, Switch) ======= */
+/* ======================================================= */
+
+/* DropdownMenu (Temaları ve Bayrakları içerir) */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Buton Stili */
+.dropbtn {
+  background-color: var(--accent-color);
+  color: var(--bg-color);
+  padding: 8px 12px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.dropbtn:hover {
+  background-color: #ffc400;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%; 
+  right: 0;
+  background-color: var(--nav-bg);
+  min-width: 150px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  z-index: 100;
+  padding: 5px 0;
+}
+
+.dropdown-content a {
+  color: var(--text-color);
+  padding: 10px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: var(--search-bg);
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Bayrak Butonları */
+button[data-i18n-button] img {
+  width: 24px;
+  height: auto;
+  vertical-align: middle;
+}
+
+button[data-i18n-button] {
+  padding: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Dil Dropdown'ı */
+.langDropdownContent {
+  display: none;
+  position: absolute;
+  background-color: var(--nav-bg);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding: 5px;
+  z-index: 1;
+}
+
+.langDropdownContent.show {
+  display: block;
+}
+
+.language-buttons button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.language-buttons button img {
+  width: 25px;
+  height: 25px;
+}
+
+.langDropdown:hover .langDropdownContent {
+  display: block;
+}
+
+/* Toggle switch stil (Genel - Büyük Versiyon) */
+.theme-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+.theme-switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+  position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc; transition: 0.4s; border-radius: 34px;
+}
+.slider:before {
+  position: absolute; content: ""; height: 22px; width: 22px; left: 2px; bottom: 2px;
+  background-color: white; transition: 0.4s; border-radius: 50%;
+}
+input:checked+.slider { background-color: #2196F3; }
+input:checked+.slider:before { transform: translateX(24px); }

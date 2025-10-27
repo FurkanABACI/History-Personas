@@ -1,0 +1,32 @@
+<h1>Settings</h1>
+
+<section class="setting-section">
+  <h3>Appearance</h3>
+  <div class="setting-item">
+    <button id="lightThemeBtn">Light</button>
+    <button id="darkThemeBtn">Dark</button>
+    <button id="autoThemeBtn">System</button>
+  </div>
+</section>
+
+
+<section class="setting-section">
+     <h3>Language</h3>
+     <div class="settingItem">
+          <button onclick="localStorage.setItem('siteLanguage', 'tr'); location.reload();"><img
+                    src="/images/trFlag.png" alt="TR"></button>
+          <button onclick="localStorage.setItem('siteLanguage', 'en'); location.reload();"><img
+                    src="/images/usFlag.png" alt="EN"></button>
+     </div>
+</section>
+
+<section class="setting-section">
+     <h3>Chat History</h3>
+     <div class="setting-item">
+          <label for="saveChatHistory">Save Chat History</label>
+     </div>
+     <div class="setting-item">
+          <button>Clear Chat History</button>
+     </div>
+</section>
+</section>

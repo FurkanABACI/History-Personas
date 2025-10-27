@@ -4,23 +4,84 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title></title>
+  <title>JS SPA Routing Project</title>
   <meta name="description" content="">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/404.css">
+  <link rel="stylesheet" href="css/chatScreen.css">
+  <link rel="stylesheet" href="css/conversations.css">
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="css/settings.css">
 </head>
 
 <body>
   <div class="container">
     <div id="main">
+
       <nav>
-        <a href="/">Home</a>
-        <a href="/conversations">My Conversations</a>
-        <a href="/settings">Settings</a>
-        <a href="/login">Sign Up</a>
+
+        <div class="navLeft">
+          <h3>History Personas</h3>
+        </div>
+
+        <div class="navCenter">
+
+          <a href="/">Main Menu</a>
+          <a href="/conversations">My Conversations</a>
+        </div>
+
+        <div class="navRight">
+
+          <label class="theme-switch">
+            <input type="checkbox" id="themeToggle">
+            <span class="slider"></span>
+          </label>
+
+          <a id="settingIcon" href="/settings"><i class="fa-solid fa-gear"></i></a>
+
+          <div class="langDropdown">
+            🌐
+            <div class="langDropdownContent">
+              <div class="language-buttons">
+                <button onclick="localStorage.setItem('siteLanguage', 'tr'); location.reload();"><img
+                    src="/images/trFlag.png" alt="TR"></button>
+                <button onclick="localStorage.setItem('siteLanguage', 'en'); location.reload();"><img
+                    src="/images/usFlag.png" alt="EN"></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="dropdown">
+            <button class="dropbtn">Sign in</button>
+            <div class="dropdown-content">
+              <a href="/login">Sign in</a>
+              <a href="/signup">Sign up</a>
+            </div>
+          </div>
+        </div>
       </nav>
       <div id="content"></div>
+
     </div>
   </div>
-  <script src="router.js"></script>
+
+  <script src="js/404.js"></script>
+  <script src="js/chatScreen.js"></script>
+  <script src="js/conversations.js"></script>
+  <script src="js/home.js"></script>
+  <script src="js/login.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/cookieManager.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/i18n.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script>
+  <script>
+    const bcrypt = dcodeIO.bcrypt;
+  </script>
 </body>
 
 </html>
