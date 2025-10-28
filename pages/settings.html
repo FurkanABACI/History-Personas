@@ -1,3 +1,4 @@
+<!-- settings.html - GÜNCELLENMİŞ -->
 <h1>Settings</h1>
 
 <section class="setting-section">
@@ -9,24 +10,28 @@
   </div>
 </section>
 
-
 <section class="setting-section">
      <h3>Language</h3>
      <div class="settingItem">
-          <button onclick="localStorage.setItem('siteLanguage', 'tr'); location.reload();"><img
-                    src="/images/trFlag.png" alt="TR"></button>
-          <button onclick="localStorage.setItem('siteLanguage', 'en'); location.reload();"><img
-                    src="/images/usFlag.png" alt="EN"></button>
+          <button class="lang-btn" data-lang="tr"><img src="/images/trFlag.png" alt="TR"></button>
+          <button class="lang-btn" data-lang="en"><img src="/images/usFlag.png" alt="EN"></button>
      </div>
 </section>
 
 <section class="setting-section">
-     <h3>Chat History</h3>
-     <div class="setting-item">
-          <label for="saveChatHistory">Save Chat History</label>
-     </div>
-     <div class="setting-item">
-          <button>Clear Chat History</button>
-     </div>
+  <h3>Chat History</h3>
+  <div class="setting-item">
+    <label for="saveChatHistory">Save Chat History</label>
+  </div>
+  <div class="setting-item">
+    <button id="clearHistoryBtn">Clear Chat History</button>
+  </div>
 </section>
+
+<section class="setting-section">
+  <div class="setting-item">
+    <button id="saveSettingsBtn" class="save-btn">Save Settings</button>
+  </div>
 </section>
+
+<div id="settingsToast"></div>

@@ -65,7 +65,7 @@ body {
 /* ======================================================= */
 
 /* Navbar'ın kendisi */
-#navbar nav {
+nav {
   display: flex;
   align-items: center;
   justify-content: space-between;

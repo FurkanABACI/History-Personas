@@ -1,4 +1,5 @@
-document.addEventListener("DOMContentLoaded", function () {
+function initLoginPage() {
+
     const toast = document.getElementById("toast");
     const signInBtn = document.getElementById("signInBtn");
     const signupBtn = document.getElementById("signupBtn");
@@ -43,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // ------------------- Event Listeners -------------------
     signupBtn.addEventListener("click", () => dialogPage.showModal());
     dialogCancel.addEventListener("click", () => dialogPage.close());
- 
+
     dialogSignUpBtn.addEventListener("click", () => {
         let firstName = userFirstName.value.trim();
         let lastName = userLastName.value.trim();
@@ -93,13 +94,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 email: email,
                 password: hashedPassword,
                 profilePhoto: avatar,
-                language:'tr',
-                theme:'Light'
             });
 
             saveUsers(users);
+            saveUserSettings(email, 'tr', 'light');
 
             showToast("Kayıt başarılı! Giriş yapabilirsiniz.");
+
 
             // Formu temizle ve dialog'u kapat
             userFirstName.value = "";
@@ -143,9 +144,17 @@ document.addEventListener("DOMContentLoaded", function () {
         if (bcrypt.compareSync(password, user.password)) {
             showToast("Hoş geldiniz, " + user.firstName + "!");
             localStorage.setItem("currentUserEmail", user.email);
-            window.location.replace("../indexFolder/index.html");
+
+            // Kullanıcı ayarlarını cookie'den yükle
+            const userSettings = loadUserSettings(user.email);
+            if (userSettings) {
+                localStorage.setItem('siteLanguage', userSettings.language);
+                localStorage.setItem('theme', userSettings.theme);
+            }
+
+            window.location.href = "/";
         } else {
             showToast("Yanlış şifre!");
         }
     });
-});
+};
