@@ -1,25 +1,25 @@
-<h2>Welcome to History Personas Page</h2>
+<h2 data-i18n="welcomeMessage">Tarihî Kişilikler Sayfasına Hoşgeldiniz</h2>
 
 <div id="loginContainer">
-     <input id="userEmail" type="email" placeholder="Email">
-     <input id="userPassword" type="password" placeholder="Password">
-     <br>
-     <button id="signInBtn">Sign in</button>
-     <button id="signupBtn">Sign up</button>
+  <input id="userEmail" type="email" placeholder="E-posta" data-i18n-placeholder="email">
+  <input id="userPassword" type="password" placeholder="Şifre" data-i18n-placeholder="password">
+  <br>
+  <button id="signInBtn" data-i18n="signIn">Giriş Yap</button>
+  <button id="signupBtn" data-i18n="signUp">Kayıt Ol</button>
 </div>
 
-<dialog id="dialogPage" style="background-color: #0f2027; color: white;border-radius: 10px;">
-     <h3>New User Registration</h3>
-     <input id="userFirstName" type="text" placeholder="First Name">
-     <input id="userLastName" type="text" placeholder="Last Name">
-     <input id="createUserEmail" type="email" placeholder="Email">
-     <input id="createUserPassword" type="password" placeholder="Password">
-     <input id="confrimUserPassword" type="password" placeholder="Confirm Password">
-     <input id="createUserProfilePhoto" type="file" accept="image/*" placeholder="Profile Photo (Optional)">
-     <div class="dialog-buttons">
-          <button id="dialogSignUpBtn" class="dialogSignUpBtnClass">Sign Up</button>
-          <button id="dialogCancel" class="dialogCancelClass">Close / Cancel</button>
-     </div>
+<dialog id="dialogPage">
+  <h3 data-i18n="newUserRegistration">Yeni Kullanıcı Kaydı</h3>
+  <input id="userFirstName" type="text" placeholder="Ad" data-i18n-placeholder="firstName">
+  <input id="userLastName" type="text" placeholder="Soyad" data-i18n-placeholder="lastName">
+  <input id="createUserEmail" type="email" placeholder="E-posta" data-i18n-placeholder="email">
+  <input id="createUserPassword" type="password" placeholder="Şifre" data-i18n-placeholder="password">
+  <input id="confirmUserPassword" type="password" placeholder="Şifreyi Onayla" data-i18n-placeholder="confirmPassword">
+  <input id="createUserProfilePhoto" type="file" accept="image/*" placeholder="Profil Fotoğrafı (İsteğe Bağlı)" data-i18n-placeholder="profilePhotoOptional">
+  <div class="dialog-buttons">
+    <button id="dialogSignUpBtn" data-i18n="signUp">Kayıt Ol</button>
+    <button id="dialogCancel" data-i18n="closeCancel">Kapat / İptal</button>
+  </div>
 </dialog>
 
 <div id="toast"></div>

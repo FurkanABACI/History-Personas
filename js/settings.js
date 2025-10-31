@@ -1,223 +1,160 @@
-// settings.js - DÜZELTİLMİŞ DİL KISMI
+// ======================================================
+// ✅ Settings.js (Cookie Entegrasyonlu)
+// ======================================================
 
-let hasUnsavedChanges = false;
 let selectedTheme = '';
 let selectedLanguage = '';
 
 function initSettingsPage() {
+    console.log("⚙️ Settings page init ediliyor...");
+
     const lightBtn = document.getElementById("lightThemeBtn");
     const darkBtn = document.getElementById("darkThemeBtn");
     const autoBtn = document.getElementById("autoThemeBtn");
-    const langButtons = document.querySelectorAll('.lang-btn'); // DEĞİŞTİ
+    const langButtons = document.querySelectorAll('.lang-btn');
     const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+    const clearHistoryBtn = document.getElementById('clearHistoryBtn');
 
-    // Mevcut ayarları yükle
-    loadCurrentSettings();
+    // ⚙️ Mevcut kullanıcı ayarlarını yükle (önce cookie, yoksa localStorage)
+    const userSettings = getCurrentUserSettings();
+    if (userSettings) {
+        selectedTheme = userSettings.theme || 'light';
+        selectedLanguage = userSettings.language || 'tr';
+        console.log("📥 Cookie'den ayarlar yüklendi:", userSettings);
+    } else {
+        selectedTheme = localStorage.getItem('theme') || 'light';
+        selectedLanguage = localStorage.getItem('siteLanguage') || 'tr';
+    }
 
-    // Tema butonları (mevcut kod)
-    lightBtn.addEventListener("click", () => {
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        if (currentTheme !== 'light') {
-            selectedTheme = 'light';
-            document.documentElement.setAttribute("data-theme", "light");
-            hasUnsavedChanges = true;
-            updateSaveButton();
-            showTempChange('Light theme selected - UNSAVED');
-        }
-    });
+    updateThemeButtons(selectedTheme);
+    updateLanguageButtons(selectedLanguage);
+    updateSaveButton();
 
-    darkBtn.addEventListener("click", () => {
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        if (currentTheme !== 'dark') {
-            selectedTheme = 'dark';
-            document.documentElement.setAttribute("data-theme", "dark");
-            hasUnsavedChanges = true;
-            updateSaveButton();
-            showTempChange('Dark theme selected - UNSAVED');
-        }
-    });
+    // Tema butonları
+    if (lightBtn) lightBtn.addEventListener("click", () => selectTheme('light'));
+    if (darkBtn) darkBtn.addEventListener("click", () => selectTheme('dark'));
+    if (autoBtn) autoBtn.addEventListener("click", () => selectTheme('system'));
 
-    autoBtn.addEventListener("click", () => {
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        if (currentTheme !== 'system') {
-            selectedTheme = 'system';
-            document.documentElement.setAttribute("data-theme", "system");
-            hasUnsavedChanges = true;
-            updateSaveButton();
-            showTempChange('System theme selected - UNSAVED');
-        }
-    });
-
-    // Dil butonları - DÜZELTİLDİ
+    // Dil butonları
     langButtons.forEach(button => {
         button.addEventListener('click', function() {
             const lang = this.getAttribute('data-lang');
-            const currentLang = localStorage.getItem('siteLanguage') || 'tr';
-            
-            if (currentLang !== lang) {
-                selectedLanguage = lang;
-                hasUnsavedChanges = true;
-                updateSaveButton();
-                updateLanguageButtons();
-                showTempChange(lang.toUpperCase() + ' language selected - UNSAVED');
-            }
+            selectLanguage(lang);
         });
     });
 
-    // Ayarları Kaydet butonu
+    // Kaydet butonu
     if (saveSettingsBtn) {
         saveSettingsBtn.addEventListener('click', saveSettings);
     }
 
-    // Sayfadan çıkış kontrolü (mevcut kod)
-    window.addEventListener('beforeunload', function(e) {
-        if (hasUnsavedChanges) {
-            e.preventDefault();
-            e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
-        }
-    });
-
-    // SPA yönlendirme kontrolü (mevcut kod)
-    const originalPushState = window.history.pushState;
-    window.history.pushState = function() {
-        if (hasUnsavedChanges) {
-            if (!confirm('You have unsaved changes. Are you sure you want to leave?')) {
-                return;
-            }
-        }
-        return originalPushState.apply(this, arguments);
-    };
-}
-
-function loadCurrentSettings() {
-    // Cookie'den mevcut ayarları yükle
-    const userSettings = getCurrentUserSettings();
-    
-    if (userSettings) {
-        selectedTheme = userSettings.theme;
-        selectedLanguage = userSettings.language;
-        
-        // LocalStorage'ı da güncelle
-        localStorage.setItem('theme', userSettings.theme);
-        localStorage.setItem('siteLanguage', userSettings.language);
-        
-        // Temayı hemen uygula
-        document.documentElement.setAttribute("data-theme", userSettings.theme);
-    } else {
-        // Cookie yoksa localStorage'dan al
-        selectedTheme = localStorage.getItem('theme') || 'light';
-        selectedLanguage = localStorage.getItem('siteLanguage') || 'tr';
+    // Geçmiş temizleme
+    if (clearHistoryBtn) {
+        clearHistoryBtn.addEventListener('click', clearChatHistory);
     }
-    
-    // Butonları güncelle
-    updateThemeButtons();
-    updateLanguageButtons();
-    
-    console.log('Loaded settings:', { theme: selectedTheme, language: selectedLanguage });
+
+    console.log("✅ Settings page hazır.");
 }
 
-function updateThemeButtons() {
-    const lightBtn = document.getElementById("lightThemeBtn");
-    const darkBtn = document.getElementById("darkThemeBtn");
-    const autoBtn = document.getElementById("autoThemeBtn");
-    
-    // Tüm tema butonlarını resetle
-    [lightBtn, darkBtn, autoBtn].forEach(btn => {
-        btn.classList.remove('active');
+// Tema seçimi
+function selectTheme(theme) {
+    selectedTheme = theme;
+    document.documentElement.setAttribute("data-theme", theme);
+    updateThemeButtons(theme);
+    updateSaveButton();
+    showTempChange(`Tema seçildi: ${theme} - Kaydetmek için butona basın`);
+}
+
+// Dil seçimi
+function selectLanguage(lang) {
+    selectedLanguage = lang;
+    if (typeof setLanguage === 'function') setLanguage(lang, true);
+    updateLanguageButtons(lang);
+    updateSaveButton();
+    showTempChange(`Dil seçildi: ${lang.toUpperCase()} - Kaydetmek için butona basın`);
+}
+
+// Kaydetme işlemi
+function saveSettings() {
+    console.log("💾 Ayarlar kaydediliyor:", { selectedTheme, selectedLanguage });
+
+    // Cookie + LocalStorage kaydet
+    saveCurrentUserSettings(selectedLanguage, selectedTheme);
+    localStorage.setItem('theme', selectedTheme);
+    localStorage.setItem('siteLanguage', selectedLanguage);
+
+    document.documentElement.setAttribute("data-theme", selectedTheme);
+    if (typeof setLanguage === 'function') setLanguage(selectedLanguage, true);
+
+    showSettingsToast('✅ Ayarlar başarıyla kaydedildi!', 'success');
+    updateSaveButton();
+}
+
+// --- Yardımcı fonksiyonlar ---
+function updateThemeButtons(theme) {
+    const buttons = {
+        light: document.getElementById("lightThemeBtn"),
+        dark: document.getElementById("darkThemeBtn"), 
+        system: document.getElementById("autoThemeBtn")
+    };
+
+    Object.values(buttons).forEach(btn => {
+        if (btn) btn.classList.remove('active');
     });
-
-    // Seçili temayı vurgula
-    const currentTheme = selectedTheme || localStorage.getItem('theme') || 'light';
-    if (currentTheme === 'light') lightBtn.classList.add('active');
-    else if (currentTheme === 'dark') darkBtn.classList.add('active');
-    else if (currentTheme === 'system') autoBtn.classList.add('active');
+    if (buttons[theme]) buttons[theme].classList.add('active');
 }
 
-function updateLanguageButtons() {
+function updateLanguageButtons(lang) {
     const langButtons = document.querySelectorAll('.lang-btn');
-    
-    // Tüm dil butonlarını resetle
     langButtons.forEach(btn => {
         btn.classList.remove('active');
-    });
-
-    // Seçili dili vurgula
-    const currentLang = selectedLanguage || localStorage.getItem('siteLanguage') || 'tr';
-    langButtons.forEach(btn => {
-        if (btn.getAttribute('data-lang') === currentLang) {
+        if (btn.getAttribute('data-lang') === lang) {
             btn.classList.add('active');
         }
     });
 }
 
-function saveSettings() {
-    // Seçili değerleri kontrol et
-    const themeToSave = selectedTheme || localStorage.getItem('theme') || 'light';
-    const langToSave = selectedLanguage || localStorage.getItem('siteLanguage') || 'tr';
-    
-    console.log('Saving settings:', { theme: themeToSave, language: langToSave });
-
-    // 1. Önce LocalStorage'a kaydet
-    localStorage.setItem('theme', themeToSave);
-    localStorage.setItem('siteLanguage', langToSave);
-    
-    // 2. Temayı uygula
-    document.documentElement.setAttribute("data-theme", themeToSave);
-    
-    // 3. Cookie'ye kaydet
-    const success = saveCurrentUserSettings(langToSave, themeToSave);
-    
-    if (success) {
-        hasUnsavedChanges = false;
-        updateSaveButton();
-        showSettingsToast('✅ Settings saved successfully!', 'success');
-        
-        // Sayfayı yenile
-        setTimeout(() => {
-            location.reload();
-        }, 1500);
-        
-    } else {
-        showSettingsToast('❌ Failed to save settings', 'error');
-    }
-}
-
 function updateSaveButton() {
     const saveSettingsBtn = document.getElementById('saveSettingsBtn');
-    if (saveSettingsBtn) {
-        if (hasUnsavedChanges) {
-            saveSettingsBtn.style.display = 'block';
-            saveSettingsBtn.textContent = 'Save Changes';
-            saveSettingsBtn.style.background = '#ff9800';
-        } else {
-            saveSettingsBtn.style.display = 'none';
-        }
+    if (!saveSettingsBtn) return;
+
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    const currentLanguage = localStorage.getItem('siteLanguage') || 'tr';
+    const hasChanges = (selectedTheme !== currentTheme) || (selectedLanguage !== currentLanguage);
+
+    if (hasChanges) {
+        saveSettingsBtn.disabled = false;
+        saveSettingsBtn.style.opacity = '1';
+        saveSettingsBtn.style.cursor = 'pointer';
+        saveSettingsBtn.textContent = 'Değişiklikleri Kaydet';
+    } else {
+        saveSettingsBtn.disabled = true;
+        saveSettingsBtn.style.opacity = '0.6';
+        saveSettingsBtn.style.cursor = 'not-allowed';
+        saveSettingsBtn.textContent = 'Ayarlar Kayıtlı';
     }
 }
 
 function showTempChange(message) {
     const toast = document.getElementById('settingsToast');
-    if (toast) {
-        toast.textContent = message;
-        toast.className = 'settings-toast show temp';
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 3000);
-    }
+    if (!toast) return;
+    toast.textContent = message;
+    toast.className = 'settings-toast show temp';
+    setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
 function showSettingsToast(message, type = 'info') {
     const toast = document.getElementById('settingsToast');
-    if (toast) {
-        toast.textContent = message;
-        toast.className = `settings-toast show ${type}`;
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 3000);
-    }
+    if (!toast) return;
+    toast.textContent = message;
+    toast.className = `settings-toast show ${type}`;
+    setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// Sayfa yüklendiğinde kaydet butonunu gizle
 document.addEventListener('DOMContentLoaded', function() {
-    updateSaveButton();
+    if (window.location.pathname === '/settings') {
+        initSettingsPage();
+    }
 });
+
+window.initSettingsPage = initSettingsPage;

@@ -119,4 +119,12 @@ body {
   background-color: var(--bg-color);
   color: var(--text-color);
 }
+.settings-toast.auto-save {
+    background: #4CAF50;
+    border-left: 4px solid #2E7D32;
+}
 
+.settings-toast.auto-save::before {
+    content: "⚡ ";
+    font-weight: bold;
+}

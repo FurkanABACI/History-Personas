@@ -1,160 +1,82 @@
-function initLoginPage() {
+document.addEventListener("DOMContentLoaded", () => {
+    initLoginPage();
+    updateNavbarUI();
+});
 
-    const toast = document.getElementById("toast");
+function initLoginPage() {
     const signInBtn = document.getElementById("signInBtn");
     const signupBtn = document.getElementById("signupBtn");
     const dialogPage = document.getElementById("dialogPage");
     const dialogSignUpBtn = document.getElementById("dialogSignUpBtn");
     const dialogCancel = document.getElementById("dialogCancel");
-    const userEmail = document.getElementById("userEmail");
-    const userPassword = document.getElementById("userPassword");
-    const userFirstName = document.getElementById("userFirstName");
-    const userLastName = document.getElementById("userLastName");
-    const createUserEmail = document.getElementById("createUserEmail");
-    const createUserPassword = document.getElementById("createUserPassword");
-    const confrimUserPassword = document.getElementById("confrimUserPassword");
-    const createUserProfilePhoto = document.getElementById("createUserProfilePhoto");
 
-    // ------------------- Toast -------------------
-    function showToast(message, duration = 3000, callback) {
-        toast.textContent = message;
-        toast.classList.add("show");
-
-        setTimeout(() => {
-            toast.classList.remove("show");
-            if (callback) callback();
-        }, duration);
-    }
-
-    // ------------------- LocalStorage -------------------
-    function getUsers() {
-        return JSON.parse(localStorage.getItem("kullanicilar") || "[]");
-    }
-
-    function saveUsers(users) {
-        localStorage.setItem("kullanicilar", JSON.stringify(users));
-    }
-
-    // ------------------- Avatar Oluştur -------------------
-    function generateAvatar(firstName, lastName) {
-        const initials = (firstName[0] + lastName[0]).toUpperCase();
-        return initials;
-    }
-
-    // ------------------- Event Listeners -------------------
+    //  Sign Up dialog aç/kapa
     signupBtn.addEventListener("click", () => dialogPage.showModal());
     dialogCancel.addEventListener("click", () => dialogPage.close());
 
-    dialogSignUpBtn.addEventListener("click", () => {
-        let firstName = userFirstName.value.trim();
-        let lastName = userLastName.value.trim();
-        let email = createUserEmail.value.trim();
-        let password = createUserPassword.value;
-        let password2 = confrimUserPassword.value;
-        let profilePhotoFile = createUserProfilePhoto.files[0];
+    //  User Login
+    signInBtn.addEventListener("click", loginUser);
 
-        if (!firstName || !lastName || !email || !password || !password2) {
-            showToast("Lütfen tüm alanları doldurun!");
-            return;
-        }
+    //  Register User
+    dialogSignUpBtn.addEventListener("click", registerUser);
+}
 
-        const nameRegex = /^[A-Za-zçğıöşüÇĞİÖŞÜ\s'-]+$/;
-        if (!nameRegex.test(firstName) || !nameRegex.test(lastName)) {
-            showToast("İsim ve soyisim sadece harflerden oluşabilir!");
-            return;
-        }
+//  Kullanıcı Kaydı
+function registerUser() {
+    let firstName = document.getElementById("userFirstName").value.trim();
+    let lastName = document.getElementById("userLastName").value.trim();
+    let email = document.getElementById("createUserEmail").value.trim();
+    let password = document.getElementById("createUserPassword").value;
+    let password2 = document.getElementById("confrimUserPassword").value;
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.com$/;
-        if (!emailRegex.test(email)) {
-            showToast("Geçersiz e-posta adresi! Örn: example@gmail.com");
-            return;
-        }
+    if (!firstName || !lastName || !email || !password) {
+        alert("Lütfen tüm alanları doldurun!");
+        return;
+    }
 
-        if (password !== password2) {
-            showToast("Şifreler eşleşmiyor!");
-            return;
-        }
+    if (password !== password2) {
+        alert("Şifreler eşleşmiyor!");
+        return;
+    }
 
-        let users = getUsers();
+    let users = JSON.parse(localStorage.getItem("kullanicilar")) || [];
+    if (users.find(u => u.email === email)) {
+        alert("Bu email zaten kayıtlı!");
+        return;
+    }
 
-        if (users.some(u => u.email === email)) {
-            showToast("Bu e-posta adresi zaten kullanımda!");
-            return;
-        }
-
-        try {
-            let hashedPassword = bcrypt.hashSync(password, 10);
-
-            // Profil fotoğrafı yoksa baş harflerden avatar oluştur
-            let avatar = profilePhotoFile ? URL.createObjectURL(profilePhotoFile) : generateAvatar(firstName, lastName);
-
-            users.push({
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                password: hashedPassword,
-                profilePhoto: avatar,
-            });
-
-            saveUsers(users);
-            saveUserSettings(email, 'tr', 'light');
-
-            showToast("Kayıt başarılı! Giriş yapabilirsiniz.");
-
-
-            // Formu temizle ve dialog'u kapat
-            userFirstName.value = "";
-            userLastName.value = "";
-            createUserEmail.value = "";
-            createUserPassword.value = "";
-            confrimUserPassword.value = "";
-            createUserProfilePhoto.value = "";
-            dialogPage.close();
-
-        } catch (error) {
-            showToast("Kayıt işlemi sırasında bir hata oluştu.");
-            console.error("Bcrypt Hata:", error);
-        }
+    users.push({
+        firstName,
+        lastName,
+        email,
+        password
     });
 
-    // ------------------- Kullanıcı Giriş -------------------
-    signInBtn.addEventListener("click", () => {
-        let email = userEmail.value.trim();
-        let password = userPassword.value;
+    localStorage.setItem("kullanicilar", JSON.stringify(users));
+    alert("Kayıt başarılı ");
+    document.getElementById("dialogPage").close();
+}
 
-        if (!email || !password) {
-            showToast("Lütfen e-posta ve şifrenizi girin!");
-            return;
-        }
+//  Kullanıcı Girişi
+function loginUser() {
+    let email = document.getElementById("userEmail").value.trim();
+    let password = document.getElementById("userPassword").value;
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.com$/;
-        if (!emailRegex.test(email)) {
-            showToast("Geçersiz e-posta adresi! Örn: example@gmail.com");
-            return;
-        }
+    let users = JSON.parse(localStorage.getItem("kullanicilar")) || [];
+    let user = users.find(u => u.email === email && u.password === password);
 
-        let users = getUsers();
-        let user = users.find(u => u.email === email);
+    if (!user) {
+        alert("Email/Şifre hatalı!");
+        return;
+    }
 
-        if (!user) {
-            showToast("Kullanıcı bulunamadı. Lütfen kayıt olun!");
-            return;
-        }
+    localStorage.setItem("currentUserEmail", user.email);
+    alert("Giriş başarılı ");
 
-        if (bcrypt.compareSync(password, user.password)) {
-            showToast("Hoş geldiniz, " + user.firstName + "!");
-            localStorage.setItem("currentUserEmail", user.email);
-
-            // Kullanıcı ayarlarını cookie'den yükle
-            const userSettings = loadUserSettings(user.email);
-            if (userSettings) {
-                localStorage.setItem('siteLanguage', userSettings.language);
-                localStorage.setItem('theme', userSettings.theme);
-            }
-
-            window.location.href = "/";
-        } else {
-            showToast("Yanlış şifre!");
-        }
-    });
-};
+    //  Ana sayfaya yönlendir
+    window.history.pushState({}, "", "/");
+    urlLocationHandler(); // Doğrudan router fonksiyonunu çağır
+    
+    // Navbar'ı hemen güncelle
+    setTimeout(updateNavbarUI, 100);
+}

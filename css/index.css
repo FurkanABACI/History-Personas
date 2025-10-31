@@ -1,5 +1,3 @@
-/* index.css */
-
 /* ======================================================= */
 /* ====== 1. GLOBAL TEMALAR (TÜM UYGULAMA İÇİN KRİTİK) ===== */
 /* ======================================================= */
@@ -19,12 +17,12 @@
   --bg-color: #1a150d;
   --text-color: #f7f7f7;
   --accent-color: #ffd700;
-  --card-bg: #2e2820; 
+  --card-bg: #2e2820;
   --search-bg: #2e2820;
   --nav-bg: #121212;
 }
 
-/* Sistem teması (kullanıcının cihaz teması) */
+/* Sistem teması */
 @media (prefers-color-scheme: dark) {
   :root[data-theme="system"] {
     --bg-color: #1a150d;
@@ -40,7 +38,6 @@
 /* ====== 2. GENEL STİL (BODY ve Ana İçerik Kapsayıcısı) ==== */
 /* ======================================================= */
 
-/* Body ve temel font ayarları */
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
@@ -51,7 +48,6 @@ body {
   min-height: 100vh;
 }
 
-/* Ana içerik kapsayıcısı (Router tarafından yüklenen içeriği sarmalar) */
 .container {
   width: 90%;
   max-width: 1200px;
@@ -64,7 +60,6 @@ body {
 /* ====== 3. NAVİGASYON (NAVBAR) STİLLERİ ================= */
 /* ======================================================= */
 
-/* Navbar'ın kendisi */
 nav {
   display: flex;
   align-items: center;
@@ -76,37 +71,22 @@ nav {
   width: 100%;
 }
 
-/* Sol kısım */
-.navLeft {
-  margin-right: auto;
-}
-
-/* Orta kısım */
-.navCenter {
-  display: flex;
-  gap: 20px;
-}
-
-/* Sağ kısım */
-.navRight {
-  display: flex;
-  gap: 10px;
-  margin-left: auto;
-  align-items: center;
-  margin-right: 25px;
-}
+.navLeft { margin-right: auto; }
+.navCenter { display: flex; gap: 20px; }
+.navRight { display: flex; gap: 10px; margin-left: auto; align-items: center; margin-right: 25px; }
 
 /* ======================================================= */
-/* ====== 4. ORTAK UI ELEMENTLERİ (Dropdown, Switch) ======= */
+/* ====== 4. ORTAK UI ELEMENTLERİ (Dropdown, Switch) ===== */
 /* ======================================================= */
 
-/* DropdownMenu (Temaları ve Bayrakları içerir) */
-.dropdown {
+.dropdown, .userDropdown, .authDropdown {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
-/* Dropdown Buton Stili */
+/* Dropdown Buton */
 .dropbtn {
   background-color: var(--accent-color);
   color: var(--bg-color);
@@ -117,97 +97,141 @@ nav {
   cursor: pointer;
   transition: background-color 0.3s;
 }
-.dropbtn:hover {
-  background-color: #ffc400;
-}
+.dropbtn:hover { background-color: #ffc400; }
 
-.dropdown-content {
-  display: none;
-  position: absolute;
-  top: 100%; 
-  right: 0;
-  background-color: var(--nav-bg);
-  min-width: 150px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-  z-index: 100;
-  padding: 5px 0;
-}
-
-.dropdown-content a {
-  color: var(--text-color);
-  padding: 10px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-.dropdown-content a:hover {
-  background-color: var(--search-bg);
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-/* Bayrak Butonları */
-button[data-i18n-button] img {
-  width: 24px;
-  height: auto;
-  vertical-align: middle;
-}
-
-button[data-i18n-button] {
-  padding: 5px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-/* Dil Dropdown'ı */
+/* Dropdown içerik */
+.dropdown-content,
+.userDropdownContent,
+.authDropdown .dropdown-content,
 .langDropdownContent {
   display: none;
   position: absolute;
+  right: 0;
+  top: 35px;
   background-color: var(--nav-bg);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-  padding: 5px;
-  z-index: 1;
+  min-width: 160px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 300;
+  padding: 10px;
 }
 
-.langDropdownContent.show {
+.dropdown:hover .dropdown-content,
+.userDropdown:hover .userDropdownContent,
+.authDropdown:hover .dropdown-content,
+.userDropdown:focus-within .userDropdownContent,
+.authDropdown:focus-within .dropdown-content,
+.langDropdown.show .langDropdownContent {
   display: block;
 }
 
+.dropdown-content a,
+.userDropdownContent a,
+.authDropdown .dropdown-content a {
+  display: block;
+  padding: 8px 10px;
+  color: var(--text-color);
+  text-decoration: none;
+}
+.dropdown-content a:hover { background-color: var(--search-bg); }
+
+/* Avatar */
+.avatarImg {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--accent-color);
+  color: #000;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  overflow: hidden;
+}
+.avatarImg img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Dropdown ayırıcı */
+.dropdown-divider {
+  height: 1px;
+  background: var(--search-bg);
+  margin: 6px 0;
+}
+
+/* Bayrak butonları */
 .language-buttons button {
   background: none;
   border: none;
   cursor: pointer;
 }
-
 .language-buttons button img {
   width: 25px;
   height: 25px;
 }
 
-.langDropdown:hover .langDropdownContent {
-  display: block;
-}
-
-/* Toggle switch stil (Genel - Büyük Versiyon) */
+/* Toggle Switch */
 .theme-switch {
   position: relative;
   display: inline-block;
   width: 50px;
   height: 26px;
 }
-.theme-switch input { opacity: 0; width: 0; height: 0; }
+.theme-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
 .slider {
-  position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #ccc; transition: 0.4s; border-radius: 34px;
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
 }
 .slider:before {
-  position: absolute; content: ""; height: 22px; width: 22px; left: 2px; bottom: 2px;
-  background-color: white; transition: 0.4s; border-radius: 50%;
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
 }
-input:checked+.slider { background-color: #2196F3; }
-input:checked+.slider:before { transform: translateX(24px); }
+input:checked + .slider { background-color: #2196F3; }
+input:checked + .slider:before { transform: translateX(24px); }
+
+/* Navbar link stilleri */
+.navCenter a {
+    color: var(--text-color);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+}
+
+.navCenter a:hover {
+    background-color: var(--search-bg);
+}
+
+/* User dropdown için ek stiller */
+.userDropdown {
+    display: none;
+    align-items: center;
+    gap: 8px;
+}
+
+.userDropdown.show {
+    display: flex;
+}
+
+.authDropdown {
+    display: none;
+}
+
+.authDropdown.show {
+    display: flex;
+}
