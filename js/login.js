@@ -10,24 +10,20 @@ function initLoginPage() {
     const dialogSignUpBtn = document.getElementById("dialogSignUpBtn");
     const dialogCancel = document.getElementById("dialogCancel");
 
-    //  Sign Up dialog aç/kapa
     signupBtn.addEventListener("click", () => dialogPage.showModal());
     dialogCancel.addEventListener("click", () => dialogPage.close());
 
-    //  User Login
     signInBtn.addEventListener("click", loginUser);
-
-    //  Register User
     dialogSignUpBtn.addEventListener("click", registerUser);
 }
 
-//  Kullanıcı Kaydı
 function registerUser() {
     let firstName = document.getElementById("userFirstName").value.trim();
     let lastName = document.getElementById("userLastName").value.trim();
     let email = document.getElementById("createUserEmail").value.trim();
     let password = document.getElementById("createUserPassword").value;
-    let password2 = document.getElementById("confrimUserPassword").value;
+    let password2 = document.getElementById("confirmUserPassword").value;
+    let profilePhotoInput = document.getElementById("createUserProfilePhoto");
 
     if (!firstName || !lastName || !email || !password) {
         alert("Lütfen tüm alanları doldurun!");
@@ -45,19 +41,61 @@ function registerUser() {
         return;
     }
 
-    users.push({
-        firstName,
-        lastName,
-        email,
-        password
-    });
 
-    localStorage.setItem("kullanicilar", JSON.stringify(users));
-    alert("Kayıt başarılı ");
-    document.getElementById("dialogPage").close();
+    if (profilePhotoInput.files.length > 0) {
+        const file = profilePhotoInput.files[0];
+        
+
+        if (file.size > 2 * 1024 * 1024) {
+            alert("Profil fotoğrafı maksimum 2MB boyutunda olabilir!");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            saveUser(e.target.result);
+        };
+        reader.onerror = function () {
+            alert("Dosya okunurken hata oluştu!");
+        };
+        reader.readAsDataURL(file);
+    } else {
+        saveUser("");
+    }
+
+    function saveUser(profilePhoto) {
+        const newUser = {
+            firstName,
+            lastName,
+            email,
+            password,
+            profilePhoto: profilePhoto || "",
+            theme: "light",
+            language: "tr",
+            createdAt: new Date().toISOString()
+        };
+
+        users.push(newUser);
+        localStorage.setItem("kullanicilar", JSON.stringify(users));
+        localStorage.setItem("currentUserEmail", email);
+
+        alert("Kayıt başarılı!");
+        document.getElementById("dialogPage").close();
+
+        document.getElementById("userFirstName").value = "";
+        document.getElementById("userLastName").value = "";
+        document.getElementById("createUserEmail").value = "";
+        document.getElementById("createUserPassword").value = "";
+        document.getElementById("confirmUserPassword").value = "";
+        document.getElementById("createUserProfilePhoto").value = "";
+
+        updateNavbarUI();
+
+        window.history.pushState({}, "", "/");
+        urlLocationHandler();
+    }
 }
 
-//  Kullanıcı Girişi
 function loginUser() {
     let email = document.getElementById("userEmail").value.trim();
     let password = document.getElementById("userPassword").value;
@@ -71,12 +109,10 @@ function loginUser() {
     }
 
     localStorage.setItem("currentUserEmail", user.email);
-    alert("Giriş başarılı ");
+    alert("Giriş başarılı!");
 
-    //  Ana sayfaya yönlendir
+    updateNavbarUI();
+
     window.history.pushState({}, "", "/");
-    urlLocationHandler(); // Doğrudan router fonksiyonunu çağır
-    
-    // Navbar'ı hemen güncelle
-    setTimeout(updateNavbarUI, 100);
+    urlLocationHandler();
 }

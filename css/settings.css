@@ -100,19 +100,19 @@ main.settings-page {
 
 /* ===================== Theme Colors ===================== */
 :root[data-theme="light"] {
-  --bg-color: #fff;
-  --text-color: #000;
+  --bg-color: #231e0f;
+  --text-color: #f8f8f5;
 }
 
 :root[data-theme="dark"] {
-  --bg-color: #111;
-  --text-color: #fff;
+  --bg-color: #1a170b;
+  --text-color: #f8f8f5;
 }
 
 :root[data-theme="system"] {
   /* Sistem tercihini kullan */
   --bg-color: #fff;
-  --text-color: #000;
+  --text-color: #f8f8f5;
 }
 
 body {

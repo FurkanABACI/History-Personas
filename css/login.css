@@ -36,3 +36,18 @@ button {
      margin: 0 auto;
      text-align: center;
 }
+
+/* Dialog stilleri */
+dialog {
+    border: none;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dialog-buttons {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}

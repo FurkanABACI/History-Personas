@@ -33,46 +33,44 @@
         </div>
 
         <!-- Toogle Switch Gece Gündüz -->
-        <div class="navRight">
-          <label class="theme-switch">
-            <input type="checkbox" id="themeToggle">
-            <span class="slider"></span>
-          </label>
+        <label class="toggle">
+          <input type="checkbox" id="modeToggle">
+          <span class="slider">🌞</span>
+        </label>
 
-          <!-- Yuvarlak avatar profil yeri -->
-          <div class="userDropdown" style="display:none;">
-            <div id="navUserAvatar" class="avatarImg" role="button" aria-haspopup="true" aria-expanded="false"></div>
+        <!-- Yuvarlak avatar profil yeri -->
+        <div class="userDropdown" style="display:none;">
+          <div id="navUserAvatar" class="avatarImg" role="button" aria-haspopup="true" aria-expanded="false"></div>
 
-            <div class="userDropdownContent" aria-hidden="true">
-              <a href="/settings" onclick="urlRoute(event)" data-i18n="settings">Settings</a>
-              <a id="logoutBtn" href="/logout" data-i18n="logout">Logout</a>
-              <div class="dropdown-divider"></div>
-              <div class="language-buttons">
-                <button onclick="localStorage.setItem('siteLanguage','tr'); location.reload();">
-                  <img src="/images/trFlag.png" alt="TR">
-                </button>
-                <button onclick="localStorage.setItem('siteLanguage','en'); location.reload();">
-                  <img src="/images/usFlag.png" alt="EN">
-                </button>
-              </div>
+          <div class="userDropdownContent" aria-hidden="true">
+            <a href="/settings" onclick="urlRoute(event)" data-i18n="settings">Settings</a>
+            <a id="logoutBtn" href="/logout" data-i18n="logout">Logout</a>
+            <div class="dropdown-divider"></div>
+            <div class="language-buttons">
+              <button onclick="localStorage.setItem('siteLanguage','tr'); location.reload();">
+                <img src="/images/trFlag.png" alt="TR">
+              </button>
+              <button onclick="localStorage.setItem('siteLanguage','en'); location.reload();">
+                <img src="/images/usFlag.png" alt="EN">
+              </button>
             </div>
           </div>
-
-          <!-- Auth Dropdown (giriş yoksa gösterilecek) -->
-          <div class="authDropdown">
-            <button class="dropbtn" data-i18n="signIn">Sign in</button>
-            <div class="dropdown-content">
-              <a href="/login" onclick="urlRoute(event)" data-i18n="signIn">Sign in</a>
-              <a href="/signup" onclick="urlRoute(event)" data-i18n="signUp">Sign up</a>
-            </div>
-          </div>
-
         </div>
 
-      </nav>
-      <div id="content"></div>
+        <!-- Auth Dropdown (giriş yoksa gösterilecek) -->
+        <div class="authDropdown">
+          <button class="dropbtn" data-i18n="signIn">Sign in</button>
+          <div class="dropdown-content">
+            <a href="/login" onclick="urlRoute(event)" data-i18n="signIn">Sign in</a>
+            <a href="/signup" onclick="urlRoute(event)" data-i18n="signUp">Sign up</a>
+          </div>
+        </div>
 
     </div>
+
+    </nav>
+    <div id="content"></div>
+
   </div>
 
   <script src="/js/router.js"></script>

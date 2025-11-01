@@ -1,8 +1,8 @@
 /* ======================================================= */
-/* ====== 1. GLOBAL TEMALAR (TÜM UYGULAMA İÇİN KRİTİK) ===== */
+/* ====== 1. GLOBAL TEMALAR (LIGHT / DARK) ================ */
 /* ======================================================= */
 
-/* Varsayılan (light) tema */
+/* Light tema */
 :root {
   --bg-color: #ffffff;
   --text-color: #000000;
@@ -35,7 +35,7 @@
 }
 
 /* ======================================================= */
-/* ====== 2. GENEL STİL (BODY ve Ana İçerik Kapsayıcısı) ==== */
+/* ====== 2. GENEL STİL (BODY ve CONTAINER) =============== */
 /* ======================================================= */
 
 body {
@@ -57,7 +57,7 @@ body {
 }
 
 /* ======================================================= */
-/* ====== 3. NAVİGASYON (NAVBAR) STİLLERİ ================= */
+/* ====== 3. NAVBAR STİLLERİ ============================== */
 /* ======================================================= */
 
 nav {
@@ -71,15 +71,46 @@ nav {
   width: 100%;
 }
 
-.navLeft { margin-right: auto; }
-.navCenter { display: flex; gap: 20px; }
-.navRight { display: flex; gap: 10px; margin-left: auto; align-items: center; margin-right: 25px; }
+.navLeft {
+  margin-right: auto;
+}
+
+.navCenter {
+  display: flex;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  gap: 20px;
+  align-items: center;
+}
+
+.navRight {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+  align-items: center;
+  margin-right: 25px;
+}
+
+.navCenter a {
+  color: var(--text-color);
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: background-color 0.3s;
+}
+
+.navCenter a:hover {
+  background-color: var(--search-bg);
+}
 
 /* ======================================================= */
-/* ====== 4. ORTAK UI ELEMENTLERİ (Dropdown, Switch) ===== */
+/* ====== 4. DROPDOWNLAR & AVATAR ========================= */
 /* ======================================================= */
 
-.dropdown, .userDropdown, .authDropdown {
+.dropdown,
+.userDropdown,
+.authDropdown {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -97,9 +128,12 @@ nav {
   cursor: pointer;
   transition: background-color 0.3s;
 }
-.dropbtn:hover { background-color: #ffc400; }
 
-/* Dropdown içerik */
+.dropbtn:hover {
+  background-color: #ffc400;
+}
+
+/* Dropdown İçerik */
 .dropdown-content,
 .userDropdownContent,
 .authDropdown .dropdown-content,
@@ -133,7 +167,10 @@ nav {
   color: var(--text-color);
   text-decoration: none;
 }
-.dropdown-content a:hover { background-color: var(--search-bg); }
+
+.dropdown-content a:hover {
+  background-color: var(--search-bg);
+}
 
 /* Avatar */
 .avatarImg {
@@ -150,88 +187,90 @@ nav {
   cursor: pointer;
   overflow: hidden;
 }
-.avatarImg img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-/* Dropdown ayırıcı */
+.avatarImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Dropdown Ayırıcı */
 .dropdown-divider {
   height: 1px;
   background: var(--search-bg);
   margin: 6px 0;
 }
 
-/* Bayrak butonları */
+/* ======================================================= */
+/* ====== 5. DİL SEÇİCİ & TOGGLE SWITCH =================== */
+/* ======================================================= */
+
 .language-buttons button {
   background: none;
   border: none;
   cursor: pointer;
 }
+
 .language-buttons button img {
   width: 25px;
   height: 25px;
 }
 
 /* Toggle Switch */
-.theme-switch {
+.toggle {
   position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 26px;
+  width: 60px;
+  height: 30px;
+  background: var(--search-bg);
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background 0.3s;
+  right: 7px;
 }
-.theme-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+
+.toggle input {
+  display: none;
 }
+
 .slider {
   position: absolute;
-  cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #ccc;
-  transition: 0.4s;
-  border-radius: 34px;
-}
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 22px;
-  width: 22px;
-  left: 2px;
-  bottom: 2px;
-  background-color: white;
-  transition: 0.4s;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-}
-input:checked + .slider { background-color: #2196F3; }
-input:checked + .slider:before { transform: translateX(24px); }
-
-/* Navbar link stilleri */
-.navCenter a {
-    color: var(--text-color);
-    text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    transition: background-color 0.3s;
+  background: var(--accent-color);
+  color: var(--text-color);
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
 }
 
-.navCenter a:hover {
-    background-color: var(--search-bg);
+input:checked+.slider {
+  left: 33px;
 }
 
-/* User dropdown için ek stiller */
+/* ======================================================= */
+/* ====== 6. GİRİŞ / KULLANICI DROPDOWNLARI =============== */
+/* ======================================================= */
+
 .userDropdown {
-    display: none;
-    align-items: center;
-    gap: 8px;
+  display: none;
+  align-items: center;
+  gap: 8px;
 }
 
 .userDropdown.show {
-    display: flex;
+  display: flex;
 }
 
 .authDropdown {
-    display: none;
+  display: none;
 }
 
 .authDropdown.show {
-    display: flex;
+  display: flex;
 }

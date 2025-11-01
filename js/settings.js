@@ -1,13 +1,16 @@
 // ======================================================
-// ✅ Settings.js (Cookie Entegrasyonlu)
+// ✅ BASİT AYARLAR SAYFASI
 // ======================================================
-
-let selectedTheme = '';
-let selectedLanguage = '';
 
 function initSettingsPage() {
     console.log("⚙️ Settings page init ediliyor...");
 
+    // Butonları bul
+    const profileUpdateBtn = document.getElementById('profileUpdateBtn');
+    const profileDialog = document.getElementById('profileDialog');
+    const saveProfileBtn = document.getElementById('saveProfileBtn');
+    const cancelDialogBtn = document.getElementById('cancelDialogBtn');
+    
     const lightBtn = document.getElementById("lightThemeBtn");
     const darkBtn = document.getElementById("darkThemeBtn");
     const autoBtn = document.getElementById("autoThemeBtn");
@@ -15,27 +18,26 @@ function initSettingsPage() {
     const saveSettingsBtn = document.getElementById('saveSettingsBtn');
     const clearHistoryBtn = document.getElementById('clearHistoryBtn');
 
-    // ⚙️ Mevcut kullanıcı ayarlarını yükle (önce cookie, yoksa localStorage)
-    const userSettings = getCurrentUserSettings();
-    if (userSettings) {
-        selectedTheme = userSettings.theme || 'light';
-        selectedLanguage = userSettings.language || 'tr';
-        console.log("📥 Cookie'den ayarlar yüklendi:", userSettings);
-    } else {
-        selectedTheme = localStorage.getItem('theme') || 'light';
-        selectedLanguage = localStorage.getItem('siteLanguage') || 'tr';
+    // PROFİL GÜNCELLEME BUTONU
+    if (profileUpdateBtn) {
+        profileUpdateBtn.addEventListener('click', openProfileDialog);
+    }
+    
+    // DIALOG BUTONLARI
+    if (saveProfileBtn) {
+        saveProfileBtn.addEventListener('click', saveProfile);
+    }
+    
+    if (cancelDialogBtn) {
+        cancelDialogBtn.addEventListener('click', closeProfileDialog);
     }
 
-    updateThemeButtons(selectedTheme);
-    updateLanguageButtons(selectedLanguage);
-    updateSaveButton();
-
-    // Tema butonları
+    // TEMA BUTONLARI
     if (lightBtn) lightBtn.addEventListener("click", () => selectTheme('light'));
     if (darkBtn) darkBtn.addEventListener("click", () => selectTheme('dark'));
     if (autoBtn) autoBtn.addEventListener("click", () => selectTheme('system'));
 
-    // Dil butonları
+    // DİL BUTONLARI
     langButtons.forEach(button => {
         button.addEventListener('click', function() {
             const lang = this.getAttribute('data-lang');
@@ -43,12 +45,12 @@ function initSettingsPage() {
         });
     });
 
-    // Kaydet butonu
+    // AYARLARI KAYDET BUTONU
     if (saveSettingsBtn) {
         saveSettingsBtn.addEventListener('click', saveSettings);
     }
 
-    // Geçmiş temizleme
+    // GEÇMİŞİ TEMİZLE BUTONU
     if (clearHistoryBtn) {
         clearHistoryBtn.addEventListener('click', clearChatHistory);
     }
@@ -56,105 +58,204 @@ function initSettingsPage() {
     console.log("✅ Settings page hazır.");
 }
 
-// Tema seçimi
-function selectTheme(theme) {
-    selectedTheme = theme;
-    document.documentElement.setAttribute("data-theme", theme);
-    updateThemeButtons(theme);
-    updateSaveButton();
-    showTempChange(`Tema seçildi: ${theme} - Kaydetmek için butona basın`);
+// ======================================================
+// PROFİL GÜNCELLEME FONKSİYONLARI
+// ======================================================
+
+function openProfileDialog() {
+    console.log("📝 Profil dialog açılıyor...");
+    
+    // Mevcut kullanıcı bilgilerini al
+    const currentUserEmail = localStorage.getItem('currentUserEmail');
+    const users = JSON.parse(localStorage.getItem('kullanicilar')) || [];
+    const currentUser = users.find(u => u.email === currentUserEmail);
+
+    if (!currentUser) {
+        alert('❌ Kullanıcı bilgileri bulunamadı! Lütfen tekrar giriş yapın.');
+        return;
+    }
+
+    // Form alanlarını doldur
+    document.getElementById('dialogFirstName').value = currentUser.firstName || '';
+    document.getElementById('dialogLastName').value = currentUser.lastName || '';
+    document.getElementById('dialogEmail').value = currentUser.email || '';
+    document.getElementById('dialogPhoto').value = '';
+
+    // Dialog'u göster
+    document.getElementById('profileDialog').showModal();
 }
 
-// Dil seçimi
-function selectLanguage(lang) {
-    selectedLanguage = lang;
-    if (typeof setLanguage === 'function') setLanguage(lang, true);
-    updateLanguageButtons(lang);
-    updateSaveButton();
-    showTempChange(`Dil seçildi: ${lang.toUpperCase()} - Kaydetmek için butona basın`);
+function closeProfileDialog() {
+    console.log("❌ Profil dialog kapatılıyor...");
+    document.getElementById('profileDialog').close();
 }
 
-// Kaydetme işlemi
-function saveSettings() {
-    console.log("💾 Ayarlar kaydediliyor:", { selectedTheme, selectedLanguage });
+function saveProfile() {
+    console.log("💾 Profil kaydediliyor...");
+    
+    const firstName = document.getElementById('dialogFirstName').value.trim();
+    const lastName = document.getElementById('dialogLastName').value.trim();
+    const email = document.getElementById('dialogEmail').value.trim();
+    const photoFile = document.getElementById('dialogPhoto').files[0];
+    const currentUserEmail = localStorage.getItem('currentUserEmail');
 
-    // Cookie + LocalStorage kaydet
-    saveCurrentUserSettings(selectedLanguage, selectedTheme);
-    localStorage.setItem('theme', selectedTheme);
-    localStorage.setItem('siteLanguage', selectedLanguage);
+    // Validasyon
+    if (!firstName || !lastName || !email) {
+        alert('❌ Lütfen tüm alanları doldurun!');
+        return;
+    }
 
-    document.documentElement.setAttribute("data-theme", selectedTheme);
-    if (typeof setLanguage === 'function') setLanguage(selectedLanguage, true);
+    if (!email.includes('@')) {
+        alert('❌ Geçerli bir email adresi girin!');
+        return;
+    }
 
-    showSettingsToast('✅ Ayarlar başarıyla kaydedildi!', 'success');
-    updateSaveButton();
-}
+    // Kullanıcıları güncelle
+    let users = JSON.parse(localStorage.getItem('kullanicilar')) || [];
+    const userIndex = users.findIndex(u => u.email === currentUserEmail);
+    
+    if (userIndex === -1) {
+        alert('❌ Kullanıcı bulunamadı!');
+        return;
+    }
 
-// --- Yardımcı fonksiyonlar ---
-function updateThemeButtons(theme) {
-    const buttons = {
-        light: document.getElementById("lightThemeBtn"),
-        dark: document.getElementById("darkThemeBtn"), 
-        system: document.getElementById("autoThemeBtn")
-    };
-
-    Object.values(buttons).forEach(btn => {
-        if (btn) btn.classList.remove('active');
-    });
-    if (buttons[theme]) buttons[theme].classList.add('active');
-}
-
-function updateLanguageButtons(lang) {
-    const langButtons = document.querySelectorAll('.lang-btn');
-    langButtons.forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.getAttribute('data-lang') === lang) {
-            btn.classList.add('active');
+    // Email değişti mi kontrol et
+    if (email !== currentUserEmail) {
+        const emailExists = users.find(u => u.email === email && u.email !== currentUserEmail);
+        if (emailExists) {
+            alert('❌ Bu email adresi zaten kullanılıyor!');
+            return;
         }
-    });
-}
+    }
 
-function updateSaveButton() {
-    const saveSettingsBtn = document.getElementById('saveSettingsBtn');
-    if (!saveSettingsBtn) return;
+    // Fotoğraf işleme
+    if (photoFile) {
+        // Dosya boyutu kontrolü (max 5MB)
+        if (photoFile.size > 5 * 1024 * 1024) {
+            alert('❌ Dosya boyutu 5MB\'dan küçük olmalı!');
+            return;
+        }
 
-    const currentTheme = localStorage.getItem('theme') || 'light';
-    const currentLanguage = localStorage.getItem('siteLanguage') || 'tr';
-    const hasChanges = (selectedTheme !== currentTheme) || (selectedLanguage !== currentLanguage);
-
-    if (hasChanges) {
-        saveSettingsBtn.disabled = false;
-        saveSettingsBtn.style.opacity = '1';
-        saveSettingsBtn.style.cursor = 'pointer';
-        saveSettingsBtn.textContent = 'Değişiklikleri Kaydet';
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            completeProfileUpdate(e.target.result);
+        };
+        reader.onerror = function() {
+            alert('❌ Dosya okunurken hata oluştu!');
+        };
+        reader.readAsDataURL(photoFile);
     } else {
-        saveSettingsBtn.disabled = true;
-        saveSettingsBtn.style.opacity = '0.6';
-        saveSettingsBtn.style.cursor = 'not-allowed';
-        saveSettingsBtn.textContent = 'Ayarlar Kayıtlı';
+        // Fotoğraf değişmedi, mevcut fotoğrafı koru
+        completeProfileUpdate(users[userIndex].profilePhoto);
+    }
+
+    function completeProfileUpdate(profilePhoto) {
+        // Kullanıcı bilgilerini güncelle
+        users[userIndex].firstName = firstName;
+        users[userIndex].lastName = lastName;
+        users[userIndex].email = email;
+        users[userIndex].profilePhoto = profilePhoto;
+
+        // localStorage'ı güncelle
+        localStorage.setItem('kullanicilar', JSON.stringify(users));
+        
+        // Email değiştiyse currentUserEmail'i de güncelle
+        if (email !== currentUserEmail) {
+            localStorage.setItem('currentUserEmail', email);
+            console.log('📧 Email güncellendi:', email);
+        }
+
+        console.log('✅ Profil güncellendi:', { firstName, lastName, email });
+        alert('✅ Profil başarıyla güncellendi!');
+        
+        closeProfileDialog();
+        
+        // Navbar'ı güncelle
+        setTimeout(() => {
+            if (typeof updateNavbarUI === 'function') {
+                updateNavbarUI();
+            }
+        }, 500);
     }
 }
 
-function showTempChange(message) {
-    const toast = document.getElementById('settingsToast');
-    if (!toast) return;
-    toast.textContent = message;
-    toast.className = 'settings-toast show temp';
-    setTimeout(() => toast.classList.remove('show'), 3000);
+// ======================================================
+// DİĞER AYAR FONKSİYONLARI
+// ======================================================
+
+function selectTheme(theme) {
+    console.log('🎨 Tema seçildi:', theme);
+    localStorage.setItem('theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
+    showToast('Tema değiştirildi: ' + theme);
 }
 
-function showSettingsToast(message, type = 'info') {
-    const toast = document.getElementById('settingsToast');
-    if (!toast) return;
-    toast.textContent = message;
-    toast.className = `settings-toast show ${type}`;
-    setTimeout(() => toast.classList.remove('show'), 3000);
+function selectLanguage(lang) {
+    console.log('🌐 Dil seçildi:', lang);
+    localStorage.setItem('siteLanguage', lang);
+    
+    // Çevirileri güncelle
+    if (typeof setLanguage === 'function') {
+        setLanguage(lang, true);
+    }
+    
+    showToast('Dil değiştirildi: ' + lang.toUpperCase());
 }
+
+function saveSettings() {
+    console.log('💾 Ayarlar kaydediliyor...');
+    showToast('✅ Ayarlar başarıyla kaydedildi!');
+}
+
+function clearChatHistory() {
+    console.log('🗑️ Sohbet geçmişi temizleniyor...');
+    
+    const currentUserEmail = localStorage.getItem('currentUserEmail');
+    if (currentUserEmail) {
+        // Kullanıcının sohbet geçmişini temizle
+        const users = JSON.parse(localStorage.getItem('kullanicilar')) || [];
+        const userIndex = users.findIndex(u => u.email === currentUserEmail);
+        
+        if (userIndex !== -1) {
+            // conversations alanını temizle (eğer varsa)
+            if (users[userIndex].conversations) {
+                users[userIndex].conversations = [];
+                localStorage.setItem('kullanicilar', JSON.stringify(users));
+            }
+        }
+    }
+    
+    // Global sohbet geçmişini de temizle
+    localStorage.removeItem('chatHistory');
+    localStorage.removeItem('conversations');
+    
+    showToast('✅ Sohbet geçmişi temizlendi!');
+}
+
+function showToast(message) {
+    const toast = document.getElementById('settingsToast');
+    if (toast) {
+        toast.textContent = message;
+        toast.className = 'settings-toast show';
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    } else {
+        // Toast yoksa alert göster
+        alert(message);
+    }
+}
+
+// ======================================================
+// SAYFA YÜKLEME
+// ======================================================
 
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('📄 DOM loaded, settings page kontrolü...');
     if (window.location.pathname === '/settings') {
         initSettingsPage();
     }
 });
 
+// Router için global fonksiyon
 window.initSettingsPage = initSettingsPage;

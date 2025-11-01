@@ -1,6 +1,12 @@
 <h1 data-i18n="settings">Ayarlar</h1>
 
 <section class="setting-section">
+  <div class="setting-item">
+    <button id="profileUpdateBtn"  class="profile-update-btn" data-i18n="UpdateProfile">Profil Bilgilerini Güncelle</button>
+  </div>
+</section>
+
+<section class="setting-section">
   <h3 data-i18n="appearance">Görünüm</h3>
   <div class="setting-item">
     <button id="lightThemeBtn" data-i18n="light">Açık</button>
@@ -12,8 +18,8 @@
 <section class="setting-section">
   <h3 data-i18n="language">Dil</h3>
   <div class="settingItem">
-    <button class="lang-btn" data-lang="tr"><img src="/images/trFlag.png" alt="TR"> Türkçe</button>
-    <button class="lang-btn" data-lang="en"><img src="/images/usFlag.png" alt="EN"> English</button>
+    <button class="lang-btn" data-lang="tr"><img src="/images/trFlag.png" alt="TR"></button>
+    <button class="lang-btn" data-lang="en"><img src="/images/usFlag.png" alt="EN"></button>
   </div>
 </section>
 
@@ -32,5 +38,35 @@
     <button id="saveSettingsBtn"  class="save-btn" data-i18n="saveSettings">Ayarları Kaydet</button>
   </div>
 </section>
+
+<!-- YENİ: Profil Güncelleme Dialog'u -->
+<dialog id="profileDialog">
+  <h3>Profili Güncelle</h3>
+  
+  <div class="form-group">
+    <label>Ad</label>
+    <input type="text" id="dialogFirstName" placeholder="Ad">
+  </div>
+  
+  <div class="form-group">
+    <label>Soyad</label>
+    <input type="text" id="dialogLastName" placeholder="Soyad">
+  </div>
+  
+  <div class="form-group">
+    <label>E-posta</label>
+    <input type="email" id="dialogEmail" placeholder="E-posta">
+  </div>
+  
+  <div class="form-group">
+    <label>Profil Fotoğrafı</label>
+    <input type="file" id="dialogPhoto" accept="image/*">
+  </div>
+  
+  <div class="dialog-buttons">
+    <button id="saveProfileBtn">Kaydet</button>
+    <button id="cancelDialogBtn">İptal</button>
+  </div>
+</dialog>
 
 <div id="settingsToast"></div>

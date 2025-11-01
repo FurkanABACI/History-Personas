@@ -1,4 +1,3 @@
-// home.js - DİL DESTEKLİ
 let figures = [];
 
 async function loadHistoricalFigures() {
@@ -8,7 +7,7 @@ async function loadHistoricalFigures() {
         const response = await fetch("/data/figures.json");
         figures = await response.json();
         const container = document.getElementById("figuresCards");
-        
+
         if (!container) {
             console.error("figuresCards container bulunamadı!");
             return;
@@ -16,7 +15,7 @@ async function loadHistoricalFigures() {
 
         console.log(`${figures.length} figür yüklendi`);
 
-        // ⚠️ DİL DESTEKLİ KART OLUŞTURMA
+
         container.innerHTML = figures.map(f => `
             <div class="figureCard" data-id="${f.id}">
                 <img class="figureImg" src="${f.img}" alt="${f.name[lang]}">
@@ -26,7 +25,7 @@ async function loadHistoricalFigures() {
         `).join("");
 
         addCardClickEvents();
-        setupSearchBox(lang); // ⚠️ DİL PARAMETRESİ EKLENDİ
+        setupSearchBox(lang);
 
     } catch (error) {
         console.error("Figürler yüklenirken hata:", error);
@@ -36,9 +35,9 @@ async function loadHistoricalFigures() {
 function addCardClickEvents() {
     const cards = document.querySelectorAll(".figureCard");
     console.log(`${cards.length} kart bulundu`);
-    
+
     cards.forEach(card => {
-        card.addEventListener("click", function() {
+        card.addEventListener("click", function () {
             const id = this.dataset.id;
             console.log("Karta tıklandı, ID:", id);
             const selectedFigure = figures.find(f => f.id === id);
@@ -51,9 +50,9 @@ function addCardClickEvents() {
 
 function setupSearchBox(lang) {
     const searchBox = document.querySelector(".searchBox");
-    
+
     if (searchBox) {
-        searchBox.addEventListener("input", function() {
+        searchBox.addEventListener("input", function () {
             const term = this.value.toLowerCase();
             const container = document.getElementById("figuresCards");
             const filtered = figures.filter(f =>
@@ -61,7 +60,7 @@ function setupSearchBox(lang) {
                 f.title[lang].toLowerCase().includes(term)
             );
 
-            // ⚠️ DİL DESTEKLİ FİLTRELEME
+
             container.innerHTML = filtered.map(f => `
                 <div class="figureCard" data-id="${f.id}">
                     <img class="figureImg" src="${f.img}" alt="${f.name[lang]}">
@@ -78,10 +77,9 @@ function setupSearchBox(lang) {
 function openFigureDialog(figure) {
     const figureDialog = document.getElementById("figureDialog");
     const lang = localStorage.getItem("siteLanguage") || "tr";
-    
+
     console.log("Dialog açılıyor:", figure.name[lang]);
-    
-    // ⚠️ DİL DESTEKLİ DIALOG İÇERİĞİ
+
     document.getElementById("dialogImg").src = figure.img;
     document.getElementById("dialogName").textContent = figure.name[lang];
     document.getElementById("dialogMeta").textContent = `${figure.life_span} • ${figure.category}`;
@@ -103,7 +101,7 @@ function closeFigureDialog() {
 
 function initHomePageEvents() {
     console.log("Home page events initializing");
-    
+
     const closeDialogBtn = document.getElementById("closeDialogBtn");
     const startChatBtn = document.getElementById("startChatBtn");
     const figureDialog = document.getElementById("figureDialog");
@@ -113,20 +111,21 @@ function initHomePageEvents() {
     }
 
     if (startChatBtn) {
-        startChatBtn.addEventListener("click", function() {
+        startChatBtn.addEventListener("click", function () {
             alert("Sohbet başlatılıyor...");
             closeFigureDialog();
+            window.location.href = "/pages/chatScreen.html";
         });
     }
 
-    window.addEventListener("keydown", function(e) {
+    window.addEventListener("keydown", function (e) {
         if (e.key === "Escape" && figureDialog && !figureDialog.classList.contains("hidden")) {
             closeFigureDialog();
         }
     });
 
     if (figureDialog) {
-        figureDialog.addEventListener("click", function(e) {
+        figureDialog.addEventListener("click", function (e) {
             if (e.target === figureDialog) {
                 closeFigureDialog();
             }
@@ -140,22 +139,20 @@ function initHomePage() {
     initHomePageEvents();
 }
 
-// ⚠️ YENİ: DİL DEĞİŞİNCE SAYFAYI YENİLE
+
 function reloadHomePageOnLanguageChange() {
     const lang = localStorage.getItem("siteLanguage") || "tr";
     console.log("Dil değişti, home page yenileniyor:", lang);
     loadHistoricalFigures();
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     console.log("DOM loaded - home.js");
-    
+
     if (window.location.pathname === "/") {
         setTimeout(initHomePage, 100);
     }
-});
-
-// ⚠️ SPA ve DİL DEĞİŞİMİ İÇİN GLOBAL FONKSİYONLAR
+})
 window.initHomePage = initHomePage;
 window.openFigureDialog = openFigureDialog;
 window.closeFigureDialog = closeFigureDialog;

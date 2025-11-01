@@ -1,7 +1,3 @@
-// ======================================================
-// ✅ Cookie Manager v3.0 - SPA Router Uyumlu
-// ======================================================
-
 // Cookie oluştur
 function setCookie(name, value, days = 365) {
   const date = new Date();
