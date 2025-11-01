@@ -1,37 +1,30 @@
+// ======================================================
+// TRANSLATIONS STORAGE
+// Tüm dil çevirilerini saklamak için obje
 let translations = {};
 
+// ======================================================
+// SET LANGUAGE
+// Dil değişikliği yap, JSON dosyasını yükle ve çevirileri uygula
 async function setLanguage(lang, preventReload = false) {
+    if (!(window.location.pathname === "/settings" && preventReload)) {
+        localStorage.setItem("siteLanguage", lang);
+    }
 
-        console.log("🌍 Dil değiştiriliyor:", lang);
+    const response = await fetch(`/Locales/${lang}.json`);
+    if (!response.ok) throw new Error('JSON dosyası bulunamadı');
 
-        if (window.location.pathname === "/settings" && preventReload) {
-            console.log("⚠️ Settings sayfasında geçici dil değişimi - localStorage yazılmayacak");
-        } else {
-            localStorage.setItem("siteLanguage", lang);
-            console.log("💾 Dil kaydedildi:", lang);
-        }
+    translations[lang] = await response.json();
+    applyTranslations();
 
-
-
-        const response = await fetch(`/Locales/${lang}.json`);
-        if (!response.ok) throw new Error('JSON dosyası bulunamadı');
-
-        translations[lang] = await response.json();
-        applyTranslations();
-
-
-        if (!preventReload && window.location.pathname === '/settings') {
-            console.log("🔄 Settings sayfası yenileniyor...");
-
-        }
-
-        console.log(`✅ Dil değiştirildi: ${lang}`);
+    if (!preventReload && window.location.pathname === '/settings') {}
 }
 
+// ======================================================
+// APPLY TRANSLATIONS
+// Sayfadaki data-i18n ve data-i18n-placeholder öğelerine çevirileri uygula
 function applyTranslations() {
     const lang = localStorage.getItem("siteLanguage") || "tr";
-    console.log("🔠 Çeviriler uygulanıyor, dil:", lang);
-
     const currentTranslations = translations[lang];
 
     if (!currentTranslations) {
@@ -41,40 +34,34 @@ function applyTranslations() {
 
     document.querySelectorAll("[data-i18n]").forEach(element => {
         const key = element.getAttribute("data-i18n");
-        if (currentTranslations[key]) {
-            element.textContent = currentTranslations[key];
-        }
+        if (currentTranslations[key]) element.textContent = currentTranslations[key];
     });
 
     document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
         const key = element.getAttribute("data-i18n-placeholder");
-        if (currentTranslations[key]) {
-            element.placeholder = currentTranslations[key];
-        }
+        if (currentTranslations[key]) element.placeholder = currentTranslations[key];
     });
 
     const titleKey = "pageTitle";
-    if (currentTranslations[titleKey]) {
-        document.title = currentTranslations[titleKey];
-    }
+    if (currentTranslations[titleKey]) document.title = currentTranslations[titleKey];
 }
 
+// ======================================================
+// INITIALIZE LANGUAGE
+// İlk yüklemede localStorage'dan dil al, yoksa varsayılanı ayarla
 function initializeLanguage() {
     let lang = localStorage.getItem("siteLanguage");
-
     if (!lang) {
         lang = "tr";
         localStorage.setItem("siteLanguage", lang);
-        console.log("🔄 Varsayılan dil ayarlandı:", lang);
     }
-
-    console.log("🎯 Başlangıç dili:", lang);
     return lang;
 }
 
+// ======================================================
+// DOMCONTENTLOADED EVENT
+// Sayfa yüklendiğinde dili uygula ve dil butonlarını ata
 document.addEventListener("DOMContentLoaded", async () => {
-    console.log("🚀 i18n: DOM loaded");
-
     const initialLang = initializeLanguage();
     await setLanguage(initialLang, true);
 
@@ -82,12 +69,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         btn.addEventListener("click", async (e) => {
             e.preventDefault();
             const langToSet = btn.getAttribute("data-lang") || btn.getAttribute("data-i18n-button");
-            console.log("🖱️ Dil butonuna tıklandı:", langToSet);
-
             await setLanguage(langToSet, true);
         });
     });
 });
 
+// ======================================================
+// GLOBAL EXPORTS
+// Diğer sayfalardan erişim için fonksiyonları window'a ata
 window.applyTranslationsToNewPage = applyTranslations;
 window.setLanguage = setLanguage;

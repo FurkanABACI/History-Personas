@@ -1,11 +1,14 @@
 // ======================================================
-// 1️⃣ GLOBAL AYARLAR
-// ------------------------------------------------------
+// GLOBAL AYARLAR
+
+const { title } = require("process");
+
+// Site başlığı ve temel değişkenler
 const urlPageTitle = "HISTORY PERSONAS";
 
 // ======================================================
-// 2️⃣ LINK TIKLAMALARINI YÖNETEN EVENT - SPA Hijacker
-// ------------------------------------------------------
+// SPA LINK TIKLAMALARI
+// Sayfa yenilenmeden link tıklamalarını yakala ve yönlendir
 document.addEventListener("click", (e) => {
   const anchor = e.target.closest("a");
   if (anchor && anchor.href.startsWith(window.location.origin) && !anchor.target) {
@@ -15,48 +18,48 @@ document.addEventListener("click", (e) => {
 });
 
 // ======================================================
-// 3️⃣ ROUTE HARİTASI
-// ------------------------------------------------------
+// ROUTE HARİTASI
+// URL ve sayfa eşleştirmeleri, özel action fonksiyonları
 const urlRoutes = {
   404: {
     template: "/pages/404.html",
     title: "404 | " + urlPageTitle,
-    description: "Page not found",
+    description: "Page not found"
   },
   "/": {
     template: "/pages/home.html",
     title: "Home | " + urlPageTitle,
-    description: "This is the Home page",
+    description: "This is the Home page"
   },
   "/home": {
     template: "/pages/home.html",
     title: "Home | " + urlPageTitle,
-    description: "This is the Home page",
+    description: "This is the Home page"
   },
   "/conversations": {
     template: "/pages/conversations.html",
     title: "Conversations | " + urlPageTitle,
-    description: "This is the Conversations Page",
+    description: "This is the Conversations Page"
   },
-  "/chat": {
-    template: "/pages/chatScreen.html",
-    title: "Chat | " + urlPageTitle,
-    description: "This is the Chat Page",
+  "/chatScreen":{
+    template:"/pages/chatScreen.html",
+    title:"Chat Screen | "+urlPageTitle,
+        description: "This is the Chat Screen Page"
   },
   "/settings": {
     template: "/pages/settings.html",
     title: "Settings | " + urlPageTitle,
-    description: "This is the Settings Page",
+    description: "This is the Settings Page"
   },
   "/login": {
     template: "/pages/login.html",
     title: "Login | " + urlPageTitle,
-    description: "This is the Login Page",
+    description: "This is the Login Page"
   },
   "/signup": {
     template: "/pages/login.html",
     title: "Sign Up | " + urlPageTitle,
-    description: "This is the Sign Up Page",
+    description: "This is the Sign Up Page"
   },
   "/logout": {
     action: () => {
@@ -69,8 +72,8 @@ const urlRoutes = {
 };
 
 // ======================================================
-// 4️⃣ URL DEĞİŞİMİ
-// ------------------------------------------------------
+// URL YÖNLENDİRME FONKSİYONU
+// Link tıklamalarında doğru route'u uygular
 const urlRoute = (event, anchorElement) => {
   event = event || window.event;
   const target = anchorElement || event.target;
@@ -85,13 +88,12 @@ const urlRoute = (event, anchorElement) => {
 };
 
 // ======================================================
-// 5️⃣ ROUTING MEKANİZMASI - ÇEVİRİ EKLENDİ
-// ------------------------------------------------------
+// ROUTING MEKANİZMASI
+// Sayfa yükleme, template fetch, çeviri ve init fonksiyonları
 const urlLocationHandler = async () => {
   let location = window.location.pathname;
   if (location.length === 0) location = "/";
 
-  // ⚠️ /home URL'sini /'a yönlendir
   if (location === "/home") {
     window.history.replaceState({}, "", "/");
     location = "/";
@@ -111,12 +113,10 @@ const urlLocationHandler = async () => {
   const html = await fetch(route.template).then((res) => res.text());
   document.getElementById("content").innerHTML = html;
 
-  // 🍪 Cookie'den kullanıcı ayarlarını yükle (settings sayfasında)
   if (location === "/settings" && typeof getCurrentUserSettings === "function") {
     setTimeout(() => {
       const cookieSettings = getCurrentUserSettings();
       if (cookieSettings && cookieSettings.language && cookieSettings.theme) {
-        console.log("🍪 Cookie'den alınan ayarlar:", cookieSettings);
         localStorage.setItem("siteLanguage", cookieSettings.language);
         localStorage.setItem("theme", cookieSettings.theme);
         document.documentElement.setAttribute("data-theme", cookieSettings.theme);
@@ -124,47 +124,27 @@ const urlLocationHandler = async () => {
     }, 200);
   }
 
-  // Sayfa özelleştirmeleri
   applyUserSettings();
 
-  // ⚠️ ÇEVİRİLERİ UYGULA
   setTimeout(() => {
-    if (typeof applyTranslationsToNewPage === 'function') {
-      console.log("Çeviriler uygulanıyor...");
-      applyTranslationsToNewPage();
-    }
+    if (typeof applyTranslationsToNewPage === 'function') { }
   }, 50);
 
-  // SAYFA YÜKLENDİKTEN SONRA İNİT FONKSİYONLARI
   setTimeout(() => {
-    console.log(`Router: ${location} sayfası init ediliyor`);
-
     if (location === "/" || location === "/home") {
-      if (typeof initHomePage === 'function') {
-        initHomePage();
-      } else if (typeof loadHistoricalFigures === 'function') {
-        loadHistoricalFigures();
-      }
+      if (typeof initHomePage === 'function') initHomePage();
+      else if (typeof loadHistoricalFigures === 'function') loadHistoricalFigures();
     } else if (location === "/settings") {
-      if (typeof initSettingsPage === 'function') {
-        initSettingsPage();
-      }
+      if (typeof initSettingsPage === 'function') initSettingsPage();
     } else if (location === "/login" || location === "/signup") {
-      if (typeof initLoginPage === 'function') {
-        initLoginPage();
-      }
+      if (typeof initLoginPage === 'function') initLoginPage();
     } else if (location === "/conversations") {
-      if (typeof loadConversations === 'function') {
-        loadConversations();
-      }
+      if (typeof loadConversations === 'function') loadConversations();
     } else if (location === "/404") {
-      if (typeof init404Page === 'function') {
-        init404Page();
-      }
+      if (typeof init404Page === 'function') init404Page();
     }
   }, 150);
 
-  // Navbar UI her sayfa yüklemesinde yenilensin
   updateNavbarUI();
 
   document.title = route.title;
@@ -172,13 +152,12 @@ const urlLocationHandler = async () => {
 };
 
 // ======================================================
-// 6️⃣ USER SETTINGS (COOKIE DESTEKLİ)
-// ------------------------------------------------------
+// USER SETTINGS (COOKIE + localStorage)
+// Kullanıcının dil ve tema ayarlarını al
 function getCurrentUserSettings() {
   const currentUserEmail = localStorage.getItem("currentUserEmail");
   if (!currentUserEmail) return null;
 
-  // 🍪 Cookie’den oku (cookieManager.js fonksiyonlarıyla)
   if (typeof loadUserSettings === "function") {
     const cookieData = loadUserSettings(currentUserEmail);
     if (cookieData) {
@@ -190,10 +169,8 @@ function getCurrentUserSettings() {
     }
   }
 
-  // Eğer cookie yoksa localStorage’dan devam et
   const users = JSON.parse(localStorage.getItem("kullanicilar") || "[]");
   const currentUser = users.find(u => u.email === currentUserEmail);
-
   if (!currentUser) return null;
 
   return {
@@ -206,81 +183,47 @@ function getCurrentUserSettings() {
 }
 
 // ======================================================
-// applyUserSettings - localStorage + cookie senkronizasyonu
-// ------------------------------------------------------
+// applyUserSettings
+// Kullanıcı ayarlarını sayfaya uygular
 function applyUserSettings() {
-  console.log("🔧 applyUserSettings ÇALIŞIYOR");
-
   const userSettings = getCurrentUserSettings();
   const savedLang = localStorage.getItem("siteLanguage");
   const savedTheme = localStorage.getItem("theme");
 
-  console.log("📊 Mevcut Durum:", { userSettings, savedLang, savedTheme });
-
   if (userSettings) {
-    console.log("✅ Kullanıcı giriş yapmış - user settings kullanılıyor");
     if (userSettings.theme) {
       document.documentElement.setAttribute("data-theme", userSettings.theme);
       localStorage.setItem("theme", userSettings.theme);
     }
-    if (userSettings.language) {
-      localStorage.setItem("siteLanguage", userSettings.language);
-      console.log("🔄 User'dan dil ayarlandı:", userSettings.language);
-    }
+    if (userSettings.language) localStorage.setItem("siteLanguage", userSettings.language);
   } else {
-    console.log("❌ Kullanıcı giriş yapmamış - localStorage kullanılıyor");
     const theme = savedTheme || 'light';
     const lang = savedLang || 'tr';
-
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("siteLanguage", lang);
   }
-
-  console.log("🎯 Son Durum:", {
-    theme: localStorage.getItem("theme"),
-    language: localStorage.getItem("siteLanguage")
-  });
 }
 
 // ======================================================
-// 🔹 NAVBAR GÖRÜNÜRLÜK
-// ======================================================
+// NAVBAR GÖRÜNÜRLÜK VE TOGGLE
+// Navbar elemanlarını göster/gizle ve tema toggle
 let toggleInitialized = false;
 function updateNavbarUI() {
   const navbar = document.getElementById("navbar");
   const currentPath = window.location.pathname;
-
-  console.log("🔄 updateNavbarUI çalıştı, path:", currentPath);
-
-  if (!navbar) {
-    console.log("❌ Navbar element bulunamadı");
-    return;
-  }
+  if (!navbar) return;
 
   if (currentPath === "/login" || currentPath === "/signup") {
     navbar.style.display = "none";
     return;
-  } else {
-    navbar.style.display = "flex";
-  }
+  } else navbar.style.display = "flex";
 
   const authDropdown = document.querySelector(".authDropdown");
   const userDropdown = document.querySelector(".userDropdown");
   const navUserAvatar = document.getElementById("navUserAvatar");
-
   const currentUserEmail = localStorage.getItem("currentUserEmail");
   const users = JSON.parse(localStorage.getItem("kullanicilar") || "[]");
   const currentUser = users.find(u => u.email === currentUserEmail);
-
-  console.log("👤 Kullanıcı durumu:", {
-    currentUserEmail,
-    currentUser: currentUser ? {
-      firstName: currentUser.firstName,
-      lastName: currentUser.lastName,
-      hasProfilePhoto: !!(currentUser.profilePhoto && currentUser.profilePhoto.trim()),
-      profilePhotoLength: currentUser.profilePhoto ? currentUser.profilePhoto.length : 0
-    } : 'Kullanıcı yok'
-  });
 
   if (currentUser) {
     if (authDropdown) authDropdown.style.display = "none";
@@ -291,47 +234,30 @@ function updateNavbarUI() {
       const lastName = currentUser.lastName || '';
       const initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
 
-      console.log("🎯 Avatar güncelleniyor:", {
-        firstName,
-        lastName,
-        initials,
-        hasProfilePhoto: !!(currentUser.profilePhoto && currentUser.profilePhoto.trim())
-      });
-
-      // 📸 PROFİL FOTOĞRAFI KONTROLÜ
       if (currentUser.profilePhoto && currentUser.profilePhoto.trim() !== "") {
-        console.log("✅ Profil fotoğrafı gösteriliyor");
-        // Profil fotoğrafı varsa - fotoğrafı göster
         navUserAvatar.style.backgroundImage = `url(${currentUser.profilePhoto})`;
         navUserAvatar.style.backgroundSize = "cover";
         navUserAvatar.style.backgroundPosition = "center";
-        navUserAvatar.textContent = ""; // Yazıyı temizle
-        navUserAvatar.style.backgroundColor = "transparent"; // Arkaplan rengini kaldır
+        navUserAvatar.textContent = "";
+        navUserAvatar.style.backgroundColor = "transparent";
       } else {
-        console.log("ℹ️ Baş harfler gösteriliyor");
-        // Profil fotoğrafı yoksa - baş harfleri göster
         navUserAvatar.style.backgroundImage = "none";
         navUserAvatar.textContent = initials || 'U';
-        navUserAvatar.style.backgroundColor = "#4CAF50"; // İstediğiniz bir renk
+        navUserAvatar.style.backgroundColor = "#4CAF50";
       }
 
       navUserAvatar.title = `${firstName} ${lastName}`;
     }
   } else {
-    console.log("🚪 Kullanıcı giriş yapmamış");
     if (authDropdown) authDropdown.style.display = "flex";
     if (userDropdown) userDropdown.style.display = "none";
   }
 
-
-  // ToogleSwitch
   const toggle = document.getElementById('modeToggle');
   const slider = document.querySelector('.slider');
 
   if (toggle && !toggleInitialized) {
     toggleInitialized = true;
-
-    // Başlangıç durumu: localStorage'dan oku
     const currentTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', currentTheme);
     toggle.checked = currentTheme === 'dark';
@@ -347,25 +273,22 @@ function updateNavbarUI() {
 }
 
 // ======================================================
-// 7️⃣ TARAYICI GERİ/İLERİ DESTEĞİ
-// ------------------------------------------------------
+// TARAYICI GERİ/İLERİ DESTEĞİ
+// onpopstate ile SPA navigasyonunu yönet
 window.onpopstate = urlLocationHandler;
 
 // ======================================================
-// 8️⃣ DIŞA AKTARIM
-// ------------------------------------------------------
+// DIŞA AKTARIM
+// Global erişim için fonksiyonları window'a ata
 window.urlRoute = urlRoute;
 window.updateNavbarUI = updateNavbarUI;
 window.getCurrentUserSettings = getCurrentUserSettings;
 
 // ======================================================
-// 9️⃣ İLK YÜKLEME
-// ------------------------------------------------------
+// İLK YÜKLEME
+// Sayfa yüklendiğinde route handler çalıştır
 document.addEventListener('DOMContentLoaded', () => {
-  console.log("Router: DOM loaded, initial route handling");
   urlLocationHandler();
 });
 
-window.addEventListener('load', () => {
-  console.log("Router: Window loaded");
-});
+window.addEventListener('load', () => { });

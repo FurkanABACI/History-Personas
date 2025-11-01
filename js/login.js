@@ -1,8 +1,14 @@
+// ======================================================
+// DOMCONTENTLOADED
+// Sayfa yüklendiğinde login page init ve navbar güncelle
 document.addEventListener("DOMContentLoaded", () => {
     initLoginPage();
     updateNavbarUI();
 });
 
+// ======================================================
+// INIT LOGIN PAGE
+// Butonları ata, dialog yönetimi ve eventler
 function initLoginPage() {
     const signInBtn = document.getElementById("signInBtn");
     const signupBtn = document.getElementById("signupBtn");
@@ -17,6 +23,9 @@ function initLoginPage() {
     dialogSignUpBtn.addEventListener("click", registerUser);
 }
 
+// ======================================================
+// REGISTER USER
+// Yeni kullanıcı kaydı ve profil fotoğrafı işlemleri
 function registerUser() {
     let firstName = document.getElementById("userFirstName").value.trim();
     let lastName = document.getElementById("userLastName").value.trim();
@@ -41,11 +50,8 @@ function registerUser() {
         return;
     }
 
-
     if (profilePhotoInput.files.length > 0) {
         const file = profilePhotoInput.files[0];
-        
-
         if (file.size > 2 * 1024 * 1024) {
             alert("Profil fotoğrafı maksimum 2MB boyutunda olabilir!");
             return;
@@ -82,6 +88,7 @@ function registerUser() {
         alert("Kayıt başarılı!");
         document.getElementById("dialogPage").close();
 
+        // Form alanlarını temizle
         document.getElementById("userFirstName").value = "";
         document.getElementById("userLastName").value = "";
         document.getElementById("createUserEmail").value = "";
@@ -91,11 +98,15 @@ function registerUser() {
 
         updateNavbarUI();
 
+        // Ana sayfaya yönlendir
         window.history.pushState({}, "", "/");
         urlLocationHandler();
     }
 }
 
+// ======================================================
+// LOGIN USER
+// Mevcut kullanıcı doğrulama ve giriş işlemleri
 function loginUser() {
     let email = document.getElementById("userEmail").value.trim();
     let password = document.getElementById("userPassword").value;
@@ -113,6 +124,7 @@ function loginUser() {
 
     updateNavbarUI();
 
+    // Ana sayfaya yönlendir
     window.history.pushState({}, "", "/");
     urlLocationHandler();
 }
