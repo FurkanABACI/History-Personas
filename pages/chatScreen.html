@@ -1,3 +1,42 @@
-<div class="container">
-  
+<div class="mainContainer">
+  <div class="leftSide">
+    <div class="figureImgContainer">
+      <img id="selectedFigureImg" src="" alt="Selected Figure" class="figureImg">
+    </div>
+    <h2 id="selectedFigureName" class="figureName"></h2>
+    <p id="selectedFigureLifeSpan" class="figureLifeSpan"></p>
+
+    <div class="infoSection">
+      <div class="infoItem">
+        <strong data-i18n="knowledgeLimit">Bilgi Sınırı:</strong>
+        <span id="selectedFigureCutoff" class="figureKnowledgeLimit"></span>
+      </div>
+      <div class="infoItem">
+        <strong data-i18n="conversationStyle">Konuşma Tarzı:</strong>
+        <p id="selectedFigureStyle" class="figureStyle"></p>
+      </div>
+    </div>
+
+    <div class="buttonGroup">
+      <button id="newChatBtn" class="navButton" data-i18n="newChat">+ Yeni Sohbet</button>
+      <button id="changePersonaBtn" class="navButton" data-i18n="changePersona">Kişilik Değiştir</button>
+      <button id="settingsBtn" class="navButton" data-i18n="settings">Ayarlar</button>
+    </div>
+  </div>
+
+  <div class="rightSide">
+
+    <!-- <div class="topSide">
+      <div class="topSideFigureImgContainer">
+        <img id="topSideSelectedFigureImg" src="" alt="Selected Figure" class="topSideFigureImg">
+      </div>
+      <div class="topSideInfo">
+        <h2 id="topSideSelectedFigureName" class="topSideFigureName"></h2>
+        <p id="topSideSelectedFigureLifeSpan" class="topSideFigureLifeSpan"></p>
+      </div>
+    </div> -->
+
+    <div class="chatArea">
+    </div>
+  </div>
 </div>

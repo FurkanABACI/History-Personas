@@ -2,13 +2,9 @@ let translations = {};
 
 async function setLanguage(lang, preventReload = false) {
 
-        console.log("🌍 Dil değiştiriliyor:", lang);
-
         if (window.location.pathname === "/settings" && preventReload) {
-            console.log("⚠️ Settings sayfasında geçici dil değişimi - localStorage yazılmayacak");
         } else {
             localStorage.setItem("siteLanguage", lang);
-            console.log("💾 Dil kaydedildi:", lang);
         }
 
 
@@ -21,21 +17,17 @@ async function setLanguage(lang, preventReload = false) {
 
 
         if (!preventReload && window.location.pathname === '/settings') {
-            console.log("🔄 Settings sayfası yenileniyor...");
 
         }
 
-        console.log(`✅ Dil değiştirildi: ${lang}`);
 }
 
 function applyTranslations() {
     const lang = localStorage.getItem("siteLanguage") || "tr";
-    console.log("🔠 Çeviriler uygulanıyor, dil:", lang);
 
     const currentTranslations = translations[lang];
 
     if (!currentTranslations) {
-        console.warn('⚠️ Çeviriler yüklenmedi:', lang);
         return;
     }
 
@@ -65,15 +57,12 @@ function initializeLanguage() {
     if (!lang) {
         lang = "tr";
         localStorage.setItem("siteLanguage", lang);
-        console.log("🔄 Varsayılan dil ayarlandı:", lang);
     }
 
-    console.log("🎯 Başlangıç dili:", lang);
     return lang;
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-    console.log("🚀 i18n: DOM loaded");
 
     const initialLang = initializeLanguage();
     await setLanguage(initialLang, true);
@@ -82,7 +71,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         btn.addEventListener("click", async (e) => {
             e.preventDefault();
             const langToSet = btn.getAttribute("data-lang") || btn.getAttribute("data-i18n-button");
-            console.log("🖱️ Dil butonuna tıklandı:", langToSet);
 
             await setLanguage(langToSet, true);
         });

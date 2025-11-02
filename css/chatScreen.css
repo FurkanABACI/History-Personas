@@ -1,0 +1,158 @@
+.mainContainer {
+  display: flex;
+  height: 100%;
+  background-color: var(--bg-color);
+}
+
+.leftSide {
+  width: 300px;
+  background-color: var(--card-bg);
+  border-right: 1px solid var(--border-color);
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 8px var(--shadow-color);
+  height: 100%;
+}
+
+.figureImgContainer {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.figureImg {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--accent-color);
+  margin: 0 auto;
+}
+
+.figureName {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.figureLifeSpan {
+  text-align: center;
+  color: var(--secondary-text);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.infoSection {
+  background-color: var(--search-bg);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border-color);
+}
+
+.infoItem {
+  margin-bottom: 1rem;
+}
+
+.infoItem:last-child {
+  margin-bottom: 0;
+}
+
+.infoItem strong {
+  color: var(--text-color);
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.figureKnowledgeLimit {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+.figureStyle {
+  color: var(--text-color);
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin: 0;
+  font-style: italic;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: auto;
+}
+
+.navButton {
+  background-color: var(--accent-color);
+  color: var(--text-color);
+  border: none;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.navButton:hover {
+  background-color: #d4b87a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.rightSide {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-color);
+}
+
+/* .topSide {
+  display: flex;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+  gap: 1rem;
+}
+
+.topSideFigureImgContainer {
+  flex-shrink: 0;
+}
+
+.topSideFigureImg {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent-color);
+}
+
+.topSideInfo {
+  flex: 1;
+}
+
+.topSideFigureName {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0 0 0.2rem 0;
+}
+
+.topSideFigureLifeSpan {
+  color: var(--secondary-text);
+  font-size: 0.85rem;
+  margin: 0;
+} */
+
+.chatArea {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  background-color: var(--bg-color);
+}

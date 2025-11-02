@@ -1,6 +1,7 @@
+<div class="loginMainContainer">
 <h2 data-i18n="welcomeMessage">Tarihî Kişilikler Sayfasına Hoşgeldiniz</h2>
 
-<div id="loginContainer">
+<div id="loginContainer" class="loginContainerClass">
   <input id="userEmail" type="email" placeholder="E-posta" data-i18n-placeholder="email">
   <input id="userPassword" type="password" placeholder="Şifre" data-i18n-placeholder="password">
   <br>
@@ -15,7 +16,9 @@
   <input id="createUserEmail" type="email" placeholder="E-posta" data-i18n-placeholder="email">
   <input id="createUserPassword" type="password" placeholder="Şifre" data-i18n-placeholder="password">
   <input id="confirmUserPassword" type="password" placeholder="Şifreyi Onayla" data-i18n-placeholder="confirmPassword">
+  <label for="">Profil Fotoğrafı (İsteğe Bağlı)</label>
   <input id="createUserProfilePhoto" type="file" accept="image/*" placeholder="Profil Fotoğrafı (İsteğe Bağlı)" data-i18n-placeholder="profilePhotoOptional">
+
   <div class="dialog-buttons">
     <button id="dialogSignUpBtn" data-i18n="signUp">Kayıt Ol</button>
     <button id="dialogCancel" data-i18n="closeCancel">Kapat / İptal</button>
@@ -23,3 +26,4 @@
 </dialog>
 
 <div id="toast"></div>
+</div>

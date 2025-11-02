@@ -1,22 +1,17 @@
 let figures = [];
 
 async function loadHistoricalFigures() {
-    try {
-        console.log("Figürler yükleniyor...");
-        const lang = localStorage.getItem("siteLanguage") || "tr";
-        const response = await fetch("/data/figures.json");
-        figures = await response.json();
-        const container = document.getElementById("figuresCards");
 
-        if (!container) {
-            console.error("figuresCards container bulunamadı!");
-            return;
-        }
+    const lang = localStorage.getItem("siteLanguage") || "tr";
+    const response = await fetch("/data/figures.json");
+    figures = await response.json();
+    const container = document.getElementById("figuresCards");
 
-        console.log(`${figures.length} figür yüklendi`);
-
-
-        container.innerHTML = figures.map(f => `
+    if (!container) {
+        console.error("figuresCards container bulunamadı!");
+        return;
+    }
+    container.innerHTML = figures.map(f => `
             <div class="figureCard" data-id="${f.id}">
                 <img class="figureImg" src="${f.img}" alt="${f.name[lang]}">
                 <p class="figureName">${f.name[lang]}</p>
@@ -24,22 +19,16 @@ async function loadHistoricalFigures() {
             </div>
         `).join("");
 
-        addCardClickEvents();
-        setupSearchBox(lang);
-
-    } catch (error) {
-        console.error("Figürler yüklenirken hata:", error);
-    }
+    addCardClickEvents();
+    setupSearchBox(lang);
 }
 
 function addCardClickEvents() {
     const cards = document.querySelectorAll(".figureCard");
-    console.log(`${cards.length} kart bulundu`);
 
     cards.forEach(card => {
         card.addEventListener("click", function () {
             const id = this.dataset.id;
-            console.log("Karta tıklandı, ID:", id);
             const selectedFigure = figures.find(f => f.id === id);
             if (selectedFigure) {
                 openFigureDialog(selectedFigure);
@@ -78,8 +67,6 @@ function openFigureDialog(figure) {
     const figureDialog = document.getElementById("figureDialog");
     const lang = localStorage.getItem("siteLanguage") || "tr";
 
-    console.log("Dialog açılıyor:", figure.name[lang]);
-
     document.getElementById("dialogImg").src = figure.img;
     document.getElementById("dialogName").textContent = figure.name[lang];
     document.getElementById("dialogMeta").textContent = `${figure.life_span} • ${figure.category}`;
@@ -91,6 +78,8 @@ function openFigureDialog(figure) {
         .join(" • ");
     document.getElementById("dialogSources").innerHTML = sourcesHTML;
 
+    figureDialog.dataset.figureId = figure.id;
+
     figureDialog.classList.remove("hidden");
 }
 
@@ -100,7 +89,6 @@ function closeFigureDialog() {
 }
 
 function initHomePageEvents() {
-    console.log("Home page events initializing");
 
     const closeDialogBtn = document.getElementById("closeDialogBtn");
     const startChatBtn = document.getElementById("startChatBtn");
@@ -112,9 +100,14 @@ function initHomePageEvents() {
 
     if (startChatBtn) {
         startChatBtn.addEventListener("click", function () {
-            alert("Sohbet başlatılıyor...");
+            const selectedFigureId = document.getElementById("figureDialog").dataset.figureId;
+            if (selectedFigureId) {
+                localStorage.setItem('selectedFigure', selectedFigureId);
+                localStorage.setItem('historicalFigures', JSON.stringify(figures));
+                window.history.pushState({}, "", "/chat");
+                urlLocationHandler();
+            }
             closeFigureDialog();
-            window.location.href = "/pages/chatScreen.html";
         });
     }
 
@@ -134,7 +127,6 @@ function initHomePageEvents() {
 }
 
 function initHomePage() {
-    console.log("Home page init ediliyor");
     loadHistoricalFigures();
     initHomePageEvents();
 }
@@ -142,12 +134,10 @@ function initHomePage() {
 
 function reloadHomePageOnLanguageChange() {
     const lang = localStorage.getItem("siteLanguage") || "tr";
-    console.log("Dil değişti, home page yenileniyor:", lang);
     loadHistoricalFigures();
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("DOM loaded - home.js");
 
     if (window.location.pathname === "/") {
         setTimeout(initHomePage, 100);
