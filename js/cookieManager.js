@@ -1,3 +1,11 @@
+<<<<<<< HEAD
+=======
+// ======================================================
+// COOKIE HELPER FUNCTIONS
+// Cookie oluştur, oku ve sil
+
+// Cookie oluştur
+>>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
 function setCookie(name, value, days = 365) {
   const date = new Date();
   date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
@@ -22,17 +30,36 @@ function deleteCookie(name) {
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
 }
 
+<<<<<<< HEAD
+=======
+// ======================================================
+// USER SETTINGS VIA COOKIE
+// Kullanıcı ayarlarını kaydet ve yükle
+
+// Belirli kullanıcı için ayarları kaydet
+>>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
 function saveUserSettings(email, language, theme) {
   if (!email) return false;
   const data = JSON.stringify({ language, theme });
   return setCookie("user_" + email, data);
 }
 
+<<<<<<< HEAD
+=======
+// Belirli kullanıcı için ayarları yükle
+>>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
 function loadUserSettings(email) {
   const data = getCookie("user_" + email);
   return data ? JSON.parse(data) : null;
 }
 
+<<<<<<< HEAD
+=======
+// ======================================================
+// CURRENT USER SETTINGS
+// LocalStorage'daki geçerli kullanıcıya göre ayarları getir/kaydet
+
+>>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
 function getCurrentUserSettings() {
   const email = localStorage.getItem("currentUserEmail");
   if (!email) return null;

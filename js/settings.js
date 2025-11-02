@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+// ======================================================
+// INIT SETTINGS PAGE
+// Sayfa yüklendiğinde butonları ata ve eventleri başlat
+>>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
 function initSettingsPage() {
     const profileUpdateBtn = document.getElementById('profileUpdateBtn');
     const profileDialog = document.getElementById('profileDialog');
@@ -26,6 +32,7 @@ function initSettingsPage() {
         });
     });
 
+<<<<<<< HEAD
     if (clearHistoryBtn) clearHistoryBtn.addEventListener('click', clearChatHistory);
     const savedTheme = localStorage.getItem('theme') || 'system';
     selectTheme(savedTheme);
@@ -52,15 +59,29 @@ function updateActiveLanguage(langButtons, lang) {
 
 function openProfileDialog() {
     
+=======
+    if (saveSettingsBtn) saveSettingsBtn.addEventListener('click', saveSettings);
+    if (clearHistoryBtn) clearHistoryBtn.addEventListener('click', clearChatHistory);
+}
+
+// ======================================================
+// PROFILE MANAGEMENT
+// Profil dialog aç, kaydet ve kapat fonksiyonları
+function openProfileDialog() {
+>>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
     const currentUserEmail = localStorage.getItem('currentUserEmail');
     const users = JSON.parse(localStorage.getItem('kullanicilar')) || [];
     const currentUser = users.find(u => u.email === currentUserEmail);
+    if (!currentUser) { alert('❌ Kullanıcı bilgileri bulunamadı!'); return; }
 
+<<<<<<< HEAD
     if (!currentUser) {
         alert('❌ Kullanıcı bilgileri bulunamadı! Lütfen tekrar giriş yapın.');
         return;
     }
 
+=======
+>>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
     document.getElementById('dialogFirstName').value = currentUser.firstName || '';
     document.getElementById('dialogLastName').value = currentUser.lastName || '';
     document.getElementById('dialogEmail').value = currentUser.email || '';
@@ -74,13 +95,17 @@ function closeProfileDialog() {
 }
 
 function saveProfile() {
+<<<<<<< HEAD
     
+=======
+>>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
     const firstName = document.getElementById('dialogFirstName').value.trim();
     const lastName = document.getElementById('dialogLastName').value.trim();
     const email = document.getElementById('dialogEmail').value.trim();
     const photoFile = document.getElementById('dialogPhoto').files[0];
     const currentUserEmail = localStorage.getItem('currentUserEmail');
 
+<<<<<<< HEAD
     if (!firstName || !lastName || !email) {
         alert('❌ Lütfen tüm alanları doldurun!');
         return;
@@ -91,14 +116,20 @@ function saveProfile() {
         return;
     }
 
+=======
+    if (!firstName || !lastName || !email) { alert('❌ Lütfen tüm alanları doldurun!'); return; }
+    if (!email.includes('@')) { alert('❌ Geçerli bir email girin!'); return; }
+
+>>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
     let users = JSON.parse(localStorage.getItem('kullanicilar')) || [];
     const userIndex = users.findIndex(u => u.email === currentUserEmail);
-    
-    if (userIndex === -1) {
-        alert('❌ Kullanıcı bulunamadı!');
-        return;
+    if (userIndex === -1) { alert('❌ Kullanıcı bulunamadı!'); return; }
+
+    if (email !== currentUserEmail && users.find(u => u.email === email && u.email !== currentUserEmail)) {
+        alert('❌ Bu email zaten kullanılıyor!'); return;
     }
 
+<<<<<<< HEAD
     if (email !== currentUserEmail) {
         const emailExists = users.find(u => u.email === email && u.email !== currentUserEmail);
         if (emailExists) {
@@ -113,13 +144,13 @@ function saveProfile() {
             return;
         }
 
+=======
+    if (photoFile) {
+        if (photoFile.size > 5 * 1024 * 1024) { alert('❌ Dosya 5MB’dan küçük olmalı!'); return; }
+>>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
         const reader = new FileReader();
-        reader.onload = function(e) {
-            completeProfileUpdate(e.target.result);
-        };
-        reader.onerror = function() {
-            alert('❌ Dosya okunurken hata oluştu!');
-        };
+        reader.onload = function(e) { completeProfileUpdate(e.target.result); };
+        reader.onerror = function() { alert('❌ Dosya okunurken hata!'); };
         reader.readAsDataURL(photoFile);
     } else {
         completeProfileUpdate(users[userIndex].profilePhoto);
@@ -132,13 +163,18 @@ function saveProfile() {
         users[userIndex].profilePhoto = profilePhoto;
 
         localStorage.setItem('kullanicilar', JSON.stringify(users));
+<<<<<<< HEAD
         
         if (email !== currentUserEmail) {
             localStorage.setItem('currentUserEmail', email);
         }
+=======
+        if (email !== currentUserEmail) localStorage.setItem('currentUserEmail', email);
+
+>>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
         alert('✅ Profil başarıyla güncellendi!');
-        
         closeProfileDialog();
+<<<<<<< HEAD
         
         setTimeout(() => {
             if (typeof updateNavbarUI === 'function') {
@@ -148,6 +184,15 @@ function saveProfile() {
     }
 }
 
+=======
+        setTimeout(() => { if (typeof updateNavbarUI === 'function') updateNavbarUI(); }, 500);
+    }
+}
+
+// ======================================================
+// OTHER SETTINGS FUNCTIONS
+// Tema ve dil seçimi, ayar kaydetme ve geçmiş temizleme
+>>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
 function selectTheme(theme) {
     localStorage.setItem('theme', theme);
     document.documentElement.setAttribute('data-theme', theme);
@@ -170,6 +215,7 @@ function updateActiveTheme(theme, lightBtn, darkBtn, autoBtn) {
 
 function selectLanguage(lang) {
     localStorage.setItem('siteLanguage', lang);
+<<<<<<< HEAD
 
     if (typeof setLanguage === 'function') {
         setLanguage(lang, true);
@@ -178,11 +224,22 @@ function selectLanguage(lang) {
     showToast('Dil değiştirildi: ' + lang.toUpperCase());
 }
 
+=======
+    if (typeof setLanguage === 'function') setLanguage(lang, true);
+    showToast('Dil değiştirildi: ' + lang.toUpperCase());
+}
+
+function saveSettings() {
+    showToast('✅ Ayarlar başarıyla kaydedildi!');
+}
+
+>>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
 function clearChatHistory() {
     const currentUserEmail = localStorage.getItem('currentUserEmail');
     if (currentUserEmail) {
         const users = JSON.parse(localStorage.getItem('kullanicilar')) || [];
         const userIndex = users.findIndex(u => u.email === currentUserEmail);
+<<<<<<< HEAD
         
         if (userIndex !== -1) {
             if (users[userIndex].conversations) {
@@ -192,25 +249,33 @@ function clearChatHistory() {
         }
     }
     
+=======
+        if (userIndex !== -1 && users[userIndex].conversations) {
+            users[userIndex].conversations = [];
+            localStorage.setItem('kullanicilar', JSON.stringify(users));
+        }
+    }
+>>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
     localStorage.removeItem('chatHistory');
     localStorage.removeItem('conversations');
-    
     showToast('✅ Sohbet geçmişi temizlendi!');
 }
 
+// ======================================================
+// TOAST MESSAGE
+// Ayarlar sayfası bildirimleri
 function showToast(message) {
     const toast = document.getElementById('settingsToast');
     if (toast) {
         toast.textContent = message;
         toast.className = 'settings-toast show';
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 3000);
+        setTimeout(() => { toast.classList.remove('show'); }, 3000);
     } else {
         alert(message);
     }
 }
 
+<<<<<<< HEAD
 document.addEventListener('DOMContentLoaded', function() {
     if (window.location.pathname === '/settings') {
         initSettingsPage();
@@ -218,3 +283,14 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 window.initSettingsPage = initSettingsPage;
+=======
+// ======================================================
+// DOMCONTENTLOADED
+// Sayfa yüklendiğinde settings init
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.location.pathname === '/settings') initSettingsPage();
+});
+
+// Router için global fonksiyon
+window.initSettingsPage = initSettingsPage;
+>>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
