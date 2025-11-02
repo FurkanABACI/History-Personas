@@ -7,33 +7,15 @@ let figures = [];
 // LOAD HISTORICAL FIGURES
 // figures.json dosyasını yükle, kartları oluştur ve sayfaya ekle
 async function loadHistoricalFigures() {
-<<<<<<< HEAD
-
     const lang = localStorage.getItem("siteLanguage") || "tr";
     const response = await fetch("/data/figures.json");
     figures = await response.json();
     const container = document.getElementById("figuresCards");
 
-=======
-    const lang = localStorage.getItem("siteLanguage") || "tr";
-    const response = await fetch("/data/figures.json");
-    figures = await response.json();
-    const container = document.getElementById("figuresCards");
-
->>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
     if (!container) {
         console.error("figuresCards container bulunamadı!");
         return;
     }
-<<<<<<< HEAD
-    container.innerHTML = figures.map(f => `
-            <div class="figureCard" data-id="${f.id}">
-                <img class="figureImg" src="${f.img}" alt="${f.name[lang]}">
-                <p class="figureName">${f.name[lang]}</p>
-                <p class="figureTitle">${f.title[lang]}</p>
-            </div>
-        `).join("");
-=======
 
     container.innerHTML = figures.map(f => `
         <div class="figureCard" data-id="${f.id}">
@@ -42,7 +24,6 @@ async function loadHistoricalFigures() {
             <p class="figureTitle">${f.title[lang]}</p>
         </div>
     `).join("");
->>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
 
     addCardClickEvents();
     setupSearchBox(lang);
@@ -53,10 +34,7 @@ async function loadHistoricalFigures() {
 // Her kart tıklamasında dialog aç
 function addCardClickEvents() {
     const cards = document.querySelectorAll(".figureCard");
-<<<<<<< HEAD
 
-=======
->>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
     cards.forEach(card => {
         card.addEventListener("click", function() {
             const id = this.dataset.id;
@@ -101,16 +79,22 @@ function openFigureDialog(figure) {
     const figureDialog = document.getElementById("figureDialog");
     const lang = localStorage.getItem("siteLanguage") || "tr";
 
+    console.log("Dialog açılıyor, figure:", figure); // Debug
+
     document.getElementById("dialogImg").src = figure.img;
     document.getElementById("dialogName").textContent = figure.name[lang];
     document.getElementById("dialogMeta").textContent = `${figure.life_span} • ${figure.category}`;
     document.getElementById("dialogCutoff").textContent = figure.cutoff_year;
     document.getElementById("dialogStyle").textContent = figure.style[lang];
 
-    const sourcesHTML = figure.sources.map(s => `<a href="${s.url}" target="_blank">${s.name}</a>`).join(" • ");
+    const sourcesHTML = figure.sources
+        .map(s => `<a href="${s.url}" target="_blank">${s.name}</a>`)
+        .join(" • ");
     document.getElementById("dialogSources").innerHTML = sourcesHTML;
 
+    // Figure ID'yi dialog elementine kaydet - BU SATIR ÖNEMLİ
     figureDialog.dataset.figureId = figure.id;
+    console.log("Dialog dataset.figureId:", figureDialog.dataset.figureId); // Debug
 
     figureDialog.classList.remove("hidden");
 }
@@ -127,45 +111,48 @@ function closeFigureDialog() {
 // INIT HOME PAGE EVENTS
 // Dialog kapatma, Escape tuşu, start chat butonu ve overlay click
 function initHomePageEvents() {
-<<<<<<< HEAD
-
-=======
->>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
     const closeDialogBtn = document.getElementById("closeDialogBtn");
     const startChatBtn = document.getElementById("startChatBtn");
     const figureDialog = document.getElementById("figureDialog");
 
-    if (closeDialogBtn) closeDialogBtn.addEventListener("click", closeFigureDialog);
-
-    if (startChatBtn) {
-<<<<<<< HEAD
-        startChatBtn.addEventListener("click", function () {
-            const selectedFigureId = document.getElementById("figureDialog").dataset.figureId;
-            if (selectedFigureId) {
-                localStorage.setItem('selectedFigure', selectedFigureId);
-                localStorage.setItem('historicalFigures', JSON.stringify(figures));
-                window.history.pushState({}, "", "/chat");
-                urlLocationHandler();
-            }
-            closeFigureDialog();
-=======
-        startChatBtn.addEventListener("click", function() {
-            alert("Sohbet başlatılıyor...");
-            closeFigureDialog();
-            window.location.href("/pages/chatScreen.html");
->>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
-        });
+    if (closeDialogBtn) {
+        closeDialogBtn.addEventListener("click", closeFigureDialog);
     }
 
-    window.addEventListener("keydown", function(e) {
+if (startChatBtn) {
+    startChatBtn.addEventListener("click", function () {
+        console.log("Start Chat butonuna tıklandı"); // Debug
+        const selectedFigureId = document.getElementById("figureDialog").dataset.figureId;
+        console.log("Seçilen Figure ID:", selectedFigureId); // Debug
+        
+        if (selectedFigureId) {
+            // Seçilen kişiliği localStorage'a kaydet
+            localStorage.setItem('selectedFigure', selectedFigureId);
+            // Tarihi kişilikleri de kaydet
+            localStorage.setItem('historicalFigures', JSON.stringify(figures));
+            console.log("LocalStorage'a kaydedildi, chat sayfasına yönlendiriliyor..."); // Debug
+            
+            // Chat sayfasına yönlendir
+            window.history.pushState({}, "", "/chat");
+            urlLocationHandler();
+        } else {
+            console.error("Figure ID bulunamadı!"); // Debug
+        }
+        closeFigureDialog();
+    });
+}
+
+    window.addEventListener("keydown", function (e) {
         if (e.key === "Escape" && figureDialog && !figureDialog.classList.contains("hidden")) {
             closeFigureDialog();
         }
     });
 
     if (figureDialog) {
-        figureDialog.addEventListener("click", function(e) {
-            if (e.target === figureDialog) closeFigureDialog();
+        figureDialog.addEventListener("click", function (e) {
+            if (e.target === figureDialog) {
+                closeFigureDialog();
+            }
         });
     }
 }
@@ -185,17 +172,6 @@ function reloadHomePageOnLanguageChange() {
     const lang = localStorage.getItem("siteLanguage") || "tr";
     loadHistoricalFigures();
 }
-
-<<<<<<< HEAD
-document.addEventListener("DOMContentLoaded", function () {
-=======
-// ======================================================
-// DOMCONTENTLOADED
-// Ana sayfadaysa home page init başlat
-document.addEventListener("DOMContentLoaded", function() {
-    if (window.location.pathname === "/") setTimeout(initHomePage, 100);
-});
->>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
 
 // ======================================================
 // GLOBAL EXPORTS

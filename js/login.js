@@ -2,7 +2,10 @@
 // DOMCONTENTLOADED
 // Sayfa yüklendiğinde login page init ve navbar güncelle
 document.addEventListener("DOMContentLoaded", () => {
-    initLoginPage();
+    // Sadece login/signup sayfasında init et
+    if (window.location.pathname === "/login" || window.location.pathname === "/signup") {
+        initLoginPage();
+    }
     updateNavbarUI();
 });
 
@@ -16,11 +19,22 @@ function initLoginPage() {
     const dialogSignUpBtn = document.getElementById("dialogSignUpBtn");
     const dialogCancel = document.getElementById("dialogCancel");
 
-    signupBtn.addEventListener("click", () => dialogPage.showModal());
-    dialogCancel.addEventListener("click", () => dialogPage.close());
+    // Elementlerin var olduğundan emin ol
+    if (signupBtn) {
+        signupBtn.addEventListener("click", () => dialogPage?.showModal());
+    }
+    
+    if (dialogCancel) {
+        dialogCancel.addEventListener("click", () => dialogPage?.close());
+    }
 
-    signInBtn.addEventListener("click", loginUser);
-    dialogSignUpBtn.addEventListener("click", registerUser);
+    if (signInBtn) {
+        signInBtn.addEventListener("click", loginUser);
+    }
+    
+    if (dialogSignUpBtn) {
+        dialogSignUpBtn.addEventListener("click", registerUser);
+    }
 }
 
 // ======================================================

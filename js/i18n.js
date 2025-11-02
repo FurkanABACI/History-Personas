@@ -11,26 +11,6 @@ async function setLanguage(lang, preventReload = false) {
         localStorage.setItem("siteLanguage", lang);
     }
 
-<<<<<<< HEAD
-        if (window.location.pathname === "/settings" && preventReload) {
-        } else {
-            localStorage.setItem("siteLanguage", lang);
-        }
-
-
-
-        const response = await fetch(`/Locales/${lang}.json`);
-        if (!response.ok) throw new Error('JSON dosyası bulunamadı');
-
-        translations[lang] = await response.json();
-        applyTranslations();
-
-
-        if (!preventReload && window.location.pathname === '/settings') {
-
-        }
-
-=======
     const response = await fetch(`/Locales/${lang}.json`);
     if (!response.ok) throw new Error('JSON dosyası bulunamadı');
 
@@ -38,7 +18,6 @@ async function setLanguage(lang, preventReload = false) {
     applyTranslations();
 
     if (!preventReload && window.location.pathname === '/settings') {}
->>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
 }
 
 // ======================================================
@@ -46,10 +25,6 @@ async function setLanguage(lang, preventReload = false) {
 // Sayfadaki data-i18n ve data-i18n-placeholder öğelerine çevirileri uygula
 function applyTranslations() {
     const lang = localStorage.getItem("siteLanguage") || "tr";
-<<<<<<< HEAD
-
-=======
->>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
     const currentTranslations = translations[lang];
 
     if (!currentTranslations) {
@@ -79,10 +54,6 @@ function initializeLanguage() {
         lang = "tr";
         localStorage.setItem("siteLanguage", lang);
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
     return lang;
 }
 
@@ -90,10 +61,6 @@ function initializeLanguage() {
 // DOMCONTENTLOADED EVENT
 // Sayfa yüklendiğinde dili uygula ve dil butonlarını ata
 document.addEventListener("DOMContentLoaded", async () => {
-<<<<<<< HEAD
-
-=======
->>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
     const initialLang = initializeLanguage();
     await setLanguage(initialLang, true);
 
@@ -101,10 +68,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         btn.addEventListener("click", async (e) => {
             e.preventDefault();
             const langToSet = btn.getAttribute("data-lang") || btn.getAttribute("data-i18n-button");
-<<<<<<< HEAD
-
-=======
->>>>>>> d11ad00b90b2cb0569f15173d5d16297bd54d1ee
             await setLanguage(langToSet, true);
         });
     });
